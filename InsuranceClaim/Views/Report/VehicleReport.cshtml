@@ -1,0 +1,261 @@
+﻿@model InsuranceClaim.Models.RiskDetailModel
+@{
+    ViewBag.Title = "Vehicle Report";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section VehicleRiskAboutToExpire">
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h5>Vehicles Details</h5>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">    
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("VehicleReportSearch", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @Html.TextBox("searchText", null, new { @class = "form-control", @placeholder = "Registration Number" })
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 col-md-3 form-group-select">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(x => x.PaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+
+                                </div>
+                            </div>
+                           
+                            <div class="col-sm-5 col-md-5 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="button" id="btnSearch" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+       <table class="table" id="divTable" style="display:none">
+
+           <tr>
+               <td>Customer Name</td>
+               <td id="customerName"></td>
+           </tr>
+           <tr>
+               <td>Registration Num</td>
+               <td id="regNum"></td>
+           </tr>
+
+           <tr>
+               <td>Make</td>
+               <td id="vehicleMake"></td>
+           </tr>
+
+           <tr>
+               <td>Model</td>
+               <td id="vehicleModel"></td>
+           </tr>
+
+           <tr>
+               <td>TaxClass</td>
+               <td id="taxClass"></td>
+           </tr>
+
+           <tr>
+               <td>VehicleType</td>
+               <td id="vehicleType"></td>
+           </tr>
+
+           <tr>
+               <td>Insurance exp date</td>
+               <td id="InsExpDate"></td>
+           </tr>
+
+           <tr>
+               <td>Premium Amount</td>
+               <td id="PrmAmount"></td>
+           </tr>
+
+           <tr>
+               <td>License TransactionAmt</td>
+               <td id="LicTransactionAmt"></td>
+           </tr>
+
+           <tr>
+               <td>Arrears Amount</td>
+               <td id="ArrearsAmt"></td>
+           </tr>
+
+           <tr>
+               <td>Penalties Amount</td>
+               <td id="PenaltiesAmt"></td>
+           </tr>
+
+           <tr>
+               <td>Administration Amount</td>
+               <td id="AdministrationAmt"></td>
+           </tr>
+
+           <tr>
+               <td>TotalLic Amount</td>
+               <td id="TotalLicAmt"></td>
+           </tr>
+
+           
+
+           <tr>
+               <td>License ExpiryDate</td>
+               <td id="LicExpiryDate"></td>
+           </tr>
+
+           <tr>
+               <td>TotalRadioTV Amount</td>
+               <td id="TotalRadioTVAm"></td>
+           </tr>
+       </table>
+
+       
+       
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+        $('#btnSearch').click(function () {
+            var searchValue = $("#txtSearch").val();
+            var paymentTermId = $("#PaymentTermId").val();
+            if (searchValue != '' && paymentTermId != '')
+            {
+
+                $(".loading-area").show();
+                setTimeout(function () {
+                    $(".loading-area").hide();
+                    generateQuotewithICEcash();
+                }, 1000);
+
+                
+            }
+            else
+            {
+                toastr.error("Please enter registration number and payment term.");
+            }
+        });
+
+
+    })
+    function removeSearchBox() {
+        window.location.href = "/Report/VehicleRiskAboutExpire";
+    }
+    //function searchBydate() {
+    //    var date = $("#txtdate").val();
+    //    window.location.href = "/Report/VehicleRiskAboutExpire?Date=" + date
+    //}
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "VehicleRiskAboutExpire" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('VehicleRiskAboutExpireReport.pdf');
+    });
+
+    function generateQuotewithICEcash() {       
+        $("#iceCashResponse").text('');
+            $(".loading-area").show();
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("getVehicleDetails", "CustomerRegistration")",
+                data: { regNo: $("#searchText").val(), PaymentTerm: $("#PaymentTermId").val() },
+            success: function (data) {
+                debugger;
+                if (data.result == 0) {                 
+                    toastr.error(data.message);
+                    $("#divTable").hide();
+                    $(".loading-area").hide();
+                }
+                if (data.result == 1) {
+                    debugger;
+                    $("#divTable").show();
+                    var quote = data.Data.Response.Quotes[0];
+                    var vehicle = data.Data.Response.Quotes[0].Vehicle;
+                    var policy = data.Data.Response.Quotes[0].Policy;
+                    var clientDetail = data.Data.Response.Quotes[0].Client;
+                    var licenceDetail = data.Data.Response.Quotes[0].Licence;
+
+                    $("#regNum").text(quote.VRN);
+                    $("#vehicleMake").text(vehicle.Make);
+                    //vehicleModel
+                    $("#vehicleModel").text(vehicle.Model);
+                    $("#taxClass").text(vehicle.TaxClass);
+                    $("#vehicleType").text(vehicle.VehicleType);
+                    $("#InsExpDate").text(policy.EndDate);
+                    $("#PrmAmount").text(policy.CoverAmount);
+                    $("#customerName").text(clientDetail.FirstName + ' ' + clientDetail.LastName);
+                    //PrmAmount
+                    //InsExpDate
+                    $("#LicTransactionAmt").text(licenceDetail.TransactionAmt);
+                    $("#ArrearsAmt").text(licenceDetail.ArrearsAmt);
+                    $("#PenaltiesAmt").text(licenceDetail.PenaltiesAmt);
+                    $("#AdministrationAmt").text(licenceDetail.AdministrationAmt);
+                    $("#TotalLicAmt").text(licenceDetail.TotalLicAmt);
+                    $("#TotalRadioTVAm").text(licenceDetail.TotalRadioTVAm);
+                    $("#LicExpiryDate").text(licenceDetail.LicExpiryDate);
+                  
+                    $(".loading-area").hide();
+                }
+               
+
+            }
+             //EINDE error
+        }); //EINDE ajax
+    
+
+    $(".loading-area").hide();
+
+    }
+
+
+
+
+</script>

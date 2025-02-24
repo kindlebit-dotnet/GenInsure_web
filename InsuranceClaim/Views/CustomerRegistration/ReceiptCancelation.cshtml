@@ -1,0 +1,247 @@
+﻿@model InsuranceClaim.Models.ReceiptCancelationModel
+
+@{
+    ViewBag.Title = "New Daily Receipt Report";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+
+<div class="productsave-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Receipted Cancellation</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+
+                </div>
+            </div>
+        </div>
+        <div class="product-table-grid">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Policy Number</th>
+                        <th>Reciepted Date</th>
+                        <th>Posted By</th>
+                        <th>Reciepted Amount</th>
+                        <th>Payment Method</th>
+                        <th>Payment Reference</th>
+                        <th class="action-th">Action</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model.receiptAndPayments)
+                    {
+
+
+                    <tr>
+
+                        <td>@item.policyNumber </td>
+                        <td>@item.CreatedOn.ToString("dd MMM yyyy")</td>
+                        <td>by</td>
+                        @if (item.paymentMethod != "cancel")
+                        {
+                            <td>@item.currency @item.Amount</td>
+                        }
+                        else
+                        {
+                            <td>@item.currency @(item.Amount *-1)</td>
+                        }
+
+                        <td>@item.paymentMethod</td>
+                        <td>@item.reference</td>
+
+
+                        <td colspan="1" class="text-nowrap">
+                            @if (item.paymentMethod != "cancel")
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger btn-sm" data-val="@item.Id" data-toggle="modal" data-target="#showReceipt">Cancel Receipt</button>
+
+                                </div>
+                            }
+
+
+
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="showReceipt" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalLabelLarge">Payment Cancellation</h4>
+
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid bg-light py-3">
+                    <div class="row">
+                        <div class="col-md-12 mx-auto">
+                            <div class="card card-body">
+                                <p class="d-flex flex-column" style="text-align: center;color: #00bcea;font-weight: bold;">Are you sure you want to Cancel  this Payment ?</p>
+                                @*<div class="alert alert-danger">
+                                        <a class="close font-weight-light" data-dismiss="alert" href="#">×</a>Password is too short.
+                                    </div>*@
+                                <input id="recieptId" hidden type="text" readonly>
+                                <input id="policyId" hidden type="text" readonly>
+
+
+                                <fieldset>
+                                    <div class="form-group has-success col-md-6">
+                                        <label for="uname1">Amount Paid</label>
+                                        <input class="form-control input-lg " id="amount" placeholder="Amount" name="amount" type="text" readonly>
+                                    </div>
+                                    <div class="form-group has-success col-md-6">
+                                        <label for="uname1">Currency</label>
+                                        <input class="form-control input-lg " id="currency" placeholder="currency" name="amount" type="text" readonly>
+                                    </div>
+                                    <div class="form-group has-success">
+                                        <label for="uname1">Receipted Date</label>
+                                        <input class="form-control input-lg" placeholder="Date" name="date" value="" id="receiptedDate" type="text" readonly>
+                                    </div>
+                                    <div class="form-group has-success">
+                                        <label for="uname1">Policy Number</label>
+                                        <input class="form-control input-lg" placeholder="" id="policyNumber" name="" value="" type="text" readonly>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="uname1">Reason For Cancellation</label>
+                                        <textarea class="form-control input-lg" placeholder="Enter reason for Cancellation " id="reason" value="" type="text"></textarea>
+                                    </div>
+                                    @*<div class="checkbox">
+                                            <label class="small">
+                                                <input name="terms" type="checkbox">I have read and agree to the <a href="#">terms of service</a>
+                                            </label>
+                                        </div>*@
+                                    @*<input class="btn btn-lg btn-primary btn-block" value="Sign Me Up" type="submit">*@
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="ConfirmDelete();">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    let SettingListId;
+
+
+    $('#showReceipt').on('show.bs.modal', function (event) {
+        var myVal = $(event.relatedTarget).data('val');
+        //$(this).find(".modal-body").text(myVal);
+
+        console.log(myVal);
+        $.ajax({
+            url: "/CustomerRegistration/getReceipt",
+            type: 'GET',
+            data: { id: myVal},
+            dataType: 'json', // added data type
+            error: function (res) {
+                alertify.error('Error : Choose correct receipt to cancel ');
+                $('#showReceipt').modal('toggle');
+            },
+            success: function (res) {
+                console.log(res);
+                $("#policyId").val(res.policyId);
+                $("#currency").val(res.currency);
+                $("#recieptId").val(res.Id);
+                $("#amount").val(res.Amount);
+                $("#policyNumber").val(res.policyNumber);
+                $("#receiptedDate").val(res.CreatedOn);
+            }
+        });
+
+
+        //$("#amount").val(myVal);
+    });
+
+    function ConfirmDelete() {
+
+        var url = "@Url.Action("ReceiptCancelation", "CustomerRegistration")";
+       // var newurl = url.replace("0", SettingListId);
+
+
+        var paymentAmt =   $("#amount").val();
+        var receiptId = $("#recieptId").val();
+        var policyId = $("#recieptId").val();
+        var policyNumber = $("#policyNumber").val();
+        var transactionRef = "cancel receipt Id" + receiptId;
+        var currency = $("#currency").val();
+        var description = $("#reason").val();
+
+
+        var data = {
+            'policyId': policyId ,
+            'amount': paymentAmt*-1,
+            'reference': transactionRef,
+            'policyNumber': policyNumber,
+            'currency': currency,
+            'paymentMethod': "cancel",
+            'userId': '@Model.CustomerId',
+
+            'discription': description
+        }
+        if (description === "") {
+            alertify.error('Please Enter Reason ');
+        } else {
+            $.ajax({
+                url: "/CustomerRegistration/paymentSend",
+                type: 'GET',
+                data: data,
+                dataType: 'json', // added data type
+                success: function (res) {
+                    console.log(res);
+                    $("#recieptId").val("");
+                    $("#amount").val("");
+                    $("#policyNumber").val("");
+                    $("#receiptedDate").val("");
+                    window.location.href = url;
+
+                    alertify.success('Payment has been Canceld');
+                    $('#showReceipt').modal('toggle');
+                }
+            });
+
+
+
+        }
+
+    }
+</script>
+

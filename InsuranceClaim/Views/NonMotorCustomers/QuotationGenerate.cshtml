@@ -1,0 +1,1052 @@
+﻿@model InsuranceClaim.Models.BrokerCustomersModel
+@{
+    ViewBag.Title = "QuotationGenerate";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    string email = "";
+    string disableClass = "";
+
+}
+
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<div class="top-banner-section">
+    <div class="container">
+        <div class="car-insurance-content">
+            <h2>Get Insurance In Less<br>Than 5 Minutes</h2>
+        </div>
+    </div>
+</div>
+
+<div class="body-content-section">
+
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row bs-wizard">
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                    <div class="Process-step-section  process-block">
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Quotation Customer Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step quotationproductdetails disabled">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Quotation Product Details</div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col" id="Custdetails">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Quotation Customer Details</h4>
+                        </div>
+
+                        <div class="radio-border-bottom">
+                            <div class="row">
+
+                                <div class="col-md-12 form-group-text">
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.CustomerType, new { @class = "gender-label" })
+                                        <div class="form-group-label">
+                                            <label>@Html.RadioButtonFor(model => model.CustomerType, "Business", new { @checked = "checked", @id = "businessRadio" })<span class="outside"><span class="inside"></span></span><strong>Business</strong></label>
+                                            <label>@Html.RadioButtonFor(model => model.CustomerType, "Individual", new { @id = "individualRadio" })<span class="outside"><span class="inside"></span></span><strong>Individual</strong></label>
+                                        </div>
+                                        @Html.ValidationMessageFor(x => x.CustomerType, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group-input">
+                            @*@using (Html.BeginForm("QuotationGenerate", "NonMotorCustomers", FormMethod.Post))
+                    {*@
+                            <input type="hidden" id="clinetId" name="clinetId" />
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.UserID)
+
+
+                            @*buisness details*@
+                            <div id="BusinessId">
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.BusinessName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.BusinessName, new { @class = "form-control", @name = "BusinessName", @autocomplete = "off", @id = "BusinessName", @placeholder = "Business Name" })
+                                            @Html.ValidationMessageFor(x => x.BusinessName, "", new { @class = "text-danger" })
+                                            <div id="reqTxtBusinessName" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.BusinessPartnerNumber, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.BusinessPartnerNumber, new { @class = "form-control", @name = "BusinessPartnerNumber", @id = "BusinessPartnerNumber", @autocomplete = "off", @placeholder = "Business Partner Number" })
+                                            @Html.ValidationMessageFor(x => x.BusinessPartnerNumber, "", new { @class = "text-danger" })
+                                            <div id="reqTxtBusinessPartnerNumber" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.BusinessAddress, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.BusinessAddress, new { @class = "form-control", @name = "BusinessAddress", @autocomplete = "off", @id = "BusinessAddress", @placeholder = "Business Address" })
+                                            @Html.ValidationMessageFor(x => x.BusinessAddress, "", new { @class = "text-danger" })
+                                            <div id="reqTxtBusinessAddress" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.BusinessPhoneNumber, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.BusinessPhoneNumber, new { @class = "form-control", @name = "BusinessPhoneNumber", @id = "BusinessPhoneNumber", @autocomplete = "off", @placeholder = "Business Phone Number" })
+                                            @Html.ValidationMessageFor(x => x.BusinessPhoneNumber, "", new { @class = "text-danger" })
+                                            <div id="reqTxtBusinessPhoneNumber" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ContactPersonName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ContactPersonName, new { @class = "form-control", @name = "ContactPersonName", @autocomplete = "off", @id = "ContactPersonName", @placeholder = "Contact Person Name" })
+                                            @Html.ValidationMessageFor(x => x.ContactPersonName, "", new { @class = "text-danger" })
+                                            <div id="reqTxtContactPersonName" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ContactPersonPhoneNumber, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ContactPersonPhoneNumber, new { @class = "form-control", @name = "ContactPersonPhoneNumber", @id = "ContactPersonPhoneNumber", @autocomplete = "off", @placeholder = "Contact Person Phone Number" })
+                                            @Html.ValidationMessageFor(x => x.ContactPersonPhoneNumber, "", new { @class = "text-danger" })
+                                            <div id="reqTxtContactPersonPhoneNumber" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ContactPersonEmail, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ContactPersonEmail, new { @class = "form-control", @name = "ContactPersonEmail", @autocomplete = "off", @id = "ContactPersonEmail", @placeholder = "Contact Person Email" })
+                                            @Html.ValidationMessageFor(x => x.ContactPersonEmail, "", new { @class = "text-danger" })
+                                            <div id="reqTxtContactPersonEmail" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="IndividualId" style="display: none;">
+                                @*<div id="IndividualId">*@
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.FirstName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @name = "FirstName", @autocomplete = "off", @id = "FirstName", @placeholder = "First Name" })
+                                            @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+                                            <div id="reqTxtFirstName" style="color:red"></div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.SurName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.SurName, new { @class = "form-control", @name = "SurName", @id = "SurName", @autocomplete = "off", @placeholder = "Last Name" })
+                                            @Html.ValidationMessageFor(x => x.SurName, "", new { @class = "text-danger" })
+                                            <div id="reqTxtSurName" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.Email, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @name = "Email", @autocomplete = "off", @id = "EmailId", @placeholder = "Email Address" })
+                                            @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                                            <div id="reqTxtContactPersonEmail" style="color:red"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ContactNumber, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ContactNumber, new { @class = "form-control", @name = "ContactNumber", @id = "ContactNumber", @autocomplete = "off", @placeholder = "Contact Number" })
+                                            @Html.ValidationMessageFor(x => x.ContactNumber, "", new { @class = "text-danger" })
+                                            <div id="reqTxtContactNumber" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.PhysicalAddress, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.PhysicalAddress, new { @class = "form-control", @name = "PhysicalAddress", @autocomplete = "off", @id = "PhysicalAddress", @placeholder = "Physical Address" })
+                                            @Html.ValidationMessageFor(x => x.PhysicalAddress, "", new { @class = "text-danger" })
+                                            <div id="reqTxtPhysicalAddress" style="color:red"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12 next-btn">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6">
+
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="text-right">
+                                            <button type="submit" id="btnNext" class="btn">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*}*@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col" id="Productdetails" style="display:none">
+                    @*< div class = "form-group-section">*@
+                    <div class="form-title">
+                        <h3>Quotation Add Product</h3>
+                    </div>
+                    <input type="hidden" id="edit-id" value="">
+                    <div class="form-group-input">
+
+                        @using (Html.BeginForm("QuotationGenerate", "NonMotorCustomers", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "user-form", @onsubmit = "return checkReqFields()" }))
+                        {
+                            @Html.HiddenFor(x => x.Id)
+
+
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-select">
+                                    <div class="form-group">
+                                        @Html.Label("Policy Class Name", new { @class = "gender-label" })
+                                        @Html.DropDownListFor(x => x.InsorancePolicyId, new SelectList(ViewBag.policyClasses, "Id", "PolicyClassName"), "Select Policy Class ", new { @class = "form-control", @id = "PolicyClassName", @required = true })
+                                        @Html.ValidationMessageFor(x => x.InsorancePolicyId, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text form-group-select">
+                                    <div class="form-group">
+                                        @Html.Label("Risk Cover Name", new { @class = "gender-label" })
+                                        @Html.DropDownListFor(x => x.RiskcoverId, new SelectList("", "Id", "RskCoverName"), "Select Risk Cover ", new { @class = "form-control", @id = "RskCoverName", @required = true })
+                                        @Html.ValidationMessageFor(x => x.RiskcoverId, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-select">
+                                    <div class="form-group">
+                                        @Html.Label("Risk Item", new { @class = "gender-label" })
+                                        @Html.DropDownListFor(x => x.RiskItemId, new SelectList("", "Id", "RiskItemName"), "Select Risk Items ", new { @class = "form-control", @id = "RiskItems", @required = true })
+                                        @Html.ValidationMessageFor(x => x.RiskItemId, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Description of Risk Insured", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.RiskDescription, new { @class = "form-control", @name = "DescriptionofRiskInsured", @autocomplete = "off", @id = "DescriptionofRiskInsured", @placeholder = "Description of Risk Insured", @required = true })
+                                        @Html.ValidationMessageFor(x => x.RiskDescription, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Address of Risk", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.RiskAddress, new { @class = "form-control", @name = "RiskAddress", @autocomplete = "off", @id = "RiskAddress", @placeholder = "Address of Risk", @required = true })
+                                        @Html.ValidationMessageFor(x => x.RiskAddress, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Cover Start Date", new { @class = "gender-label" })
+                                        <div class="form-group-label">
+
+                                            <div class='input-group' id='datetimepicker1'>
+                                                @Html.TextBoxFor(X => X.PolicyValidityPeriodFrom, new { @class = "form-control", @autocomplete = "off", @placeholder = "PolicyValidityPeriod From ", @id = "PolicyValidityPeriodFrom", @required = true })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(x => x.PolicyValidityPeriodFrom, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Cover End Date", new { @class = "gender-label" })
+                                        <div class="form-group-label">
+
+                                            <div class='input-group' id='datetimepicker2'>
+                                                @Html.TextBoxFor(x => x.PolicyValidityPeriodTo, new { @class = "form-control", @autocomplete = "off", @placeholder = "PolicyValidityPeriod To", @id = "PolicyValidityPeriodTo", @required = true })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar" id="dateid"></span>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(x => x.PolicyValidityPeriodTo, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group-select selectcurrency">
+                                    <div class="form-group">
+                                        @Html.Label("Currency", new { @class = "gender-label" })
+                                        @Html.DropDownList("FooBarDropDown", new List<SelectListItem>
+                        {
+                             new SelectListItem{ Text="Select Currency", Value = "0" },
+                             new SelectListItem{ Text="ZWL", Value = "ZWL" },
+                             new SelectListItem{ Text="USD", Value = "USD" },
+
+                                   }, new { @class = "form-control", @id = "Currency", @required = true })
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Sum Insured", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.SumInsured, new { @type = "number", @class = "form-control", @name = "SumInsured", @autocomplete = "off", @id = "SumInsured", @placeholder = "Sum Insured", @required = true })
+                                        @Html.ValidationMessageFor(x => x.SumInsured, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Risk Rate (%)", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.RiskRate, new { @type = "number", @class = "form-control", @name = "RiskRate", @autocomplete = "off", @id = "RiskRate", @placeholder = "Risk Rated", @required = true })
+                                        @Html.ValidationMessageFor(x => x.RiskRate, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-select">
+                                    <div class="form-group">
+                                        @Html.Label("Payment Term", new { @class = "gender-label" })
+                                        @Html.DropDownList("PaymentTerm", new List<SelectListItem>
+                        {
+
+                             new SelectListItem{ Text="Select Payment Term", Value = "0" },
+                             new SelectListItem{ Text="Annual", Value = "Annual" },
+                             new SelectListItem{ Text="Quarterly", Value = "Quarterly" },
+
+                             new SelectListItem{ Text="Termly", Value = "Termly" },
+                             new SelectListItem{ Text="Monthly", Value = "Monthly" },
+
+                                   }, new { @class = "form-control", @id = "PaymentTerm", @required = true })
+                                        @Html.ValidationMessageFor(x => x.PaymentTerm, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Stamp Duty", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.StampDuty, new { @class = "form-control", @name = "StampDuty", @autocomplete = "off", @id = "StampDuty", @placeholder = "Stamp Duty", @required = true, @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(x => x.StampDuty, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        @Html.Label("Total Premium Payable", new { @class = "gender-label" })
+                                        @Html.TextBoxFor(x => x.TotalPremiumPayable, new { @class = "form-control", @name = "TotalPremiumPayable", @autocomplete = "off", @id = "TotalPremiumPayable", @placeholder = "TotalPremiumPayable", @required = true, @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(x => x.TotalPremiumPayable, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    @Html.HiddenFor(x => x.BusinessName, new { @class = "busineschecked" })
+                                    @Html.HiddenFor(x => x.FirstName, new { @class = "namechecked" })
+                                    @Html.HiddenFor(x => x.Id, new { @class = "customerID" })
+                                    @Html.HiddenFor(x => x.PaymentTerm, new { @id = "paymentTermID" })
+                                    @Html.HiddenFor(x => x.Currency, new { @id = "CurrencyID" })
+
+                                </div>
+                            </div>
+                            <div class="text-left next-btn">
+                                <button type="submit" id="btnadd">Add New Product</button>
+                                <button type="submit" id="btnupdate" style="display:none">Update Product</button>
+                                <button type="submit" id="cancel-edit" style="display:none">Cancel</button>
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="user-list-section">
+            <div class="container-fluid">
+                <div id="user-list" class="user-list-box">
+                    <table class="table">
+                        <thead style="display:none" class="Policylistheader">
+                            <tr>
+                                <th>Policy Class</th>
+                                <th>RiskCover</th>
+                                <th>RiskItems</th>
+                                <th>Description</th>
+                                <th>RiskAddress</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Currency</th>
+                                <th>Sum Insured</th>
+                                <th>Risk Rate</th>
+                                <th>Payment Term</th>
+                                <th>Stamp Duty</th>
+                                <th>Total Premium Payable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="padding:0 30px">
+            <div class="next-btn text-right">
+                <button type="button" id="AddId" class="classSubmit btn" style="display:none;">Save Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+
+
+    document.getElementById("SumInsured").addEventListener("input", clearPaymentTerm);
+    document.getElementById("RiskRate").addEventListener("input", clearPaymentTerm);
+
+    function clearPaymentTerm() {
+        // Get the Payment Term dropdown
+   
+        var paymentTermDropdown = document.getElementById("PaymentTerm");
+
+        // Unselect the currently selected option (set it to the default value)
+        paymentTermDropdown.value = "0";
+        document.getElementById("StampDuty").value = "";
+        document.getElementById("TotalPremiumPayable").value = "";
+    }
+
+    $(document).ready(function () {
+       
+       
+        var businessname = $(".busineschecked").text();
+        var customername = $(".namechecked").text();
+
+        if (businessname != "") {
+            $('#businessRadio').prop('checked', true);
+            $('#BusinessId').show();
+            $('#IndividualId').hide();
+        } if (customername!="") {
+            $('#individualRadio').prop('checked', true);
+            $('#BusinessId').hide();
+            $('#IndividualId').show();
+        }
+        var customerId = $(".customerID").val();
+    
+        if (customerId != "") {
+         $.ajax({
+                    url: '@Url.Action("QuotationGenerate", "NonMotorCustomers")',
+                    type: 'POST',
+                    data: JSON.stringify(model),
+                    contentType: 'application/json',
+                    success: function () {
+                      
+                        $('#Custdetails').hide();
+                        $('#Productdetails').show();
+                        event.preventDefault();
+
+                    },
+                    error: function (xhr, status, error) {
+                    r
+                        console.error(xhr.statusText);
+                    }
+                });
+       }
+        var generatepayment = $(".paymentTermID").text();
+        if (generatepayment != null) {
+            $("#PaymentTerm").val(generatepayment);
+        }
+        $('#datetimepicker1 input').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: new Date(),
+            onSelect: function (dateText, inst) {
+                var selectedDate = new Date(dateText);
+                // Set the minDate of the second datepicker
+                $('#datetimepicker2 input').datepicker('option', 'minDate', selectedDate);
+
+                // Set the value of the second date picker greater than the first one
+                var nextDay = new Date(selectedDate);
+                nextDay.setDate(selectedDate.getDate() + 1);
+                $('#datetimepicker2 input').datepicker('setDate', nextDay);
+            }
+        });
+
+        // Initialize the second datepicker
+        $('#datetimepicker2 input').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
+
+        $("#PolicyValidityPeriodFrom, #PolicyValidityPeriodTo").change(function () {
+        
+            var fromDate = new Date($("#PolicyValidityPeriodFrom").val());
+            var toDate = new Date($("#PolicyValidityPeriodTo").val());
+
+            if (fromDate >= toDate) {
+                /* alert("Policy Validity Period To must be greater than Policy Validity Period From.");*/
+                $("#PolicyValidityPeriodTo").val("");
+            }
+        });
+
+        $.validator.addMethod("dropdownRequired", function (value, element) {
+            return value != "0"; // Change "0" to the value of the default option in your dropdown.
+        }, "Please select a payment term.");
+
+        // Apply the custom rule to the dropdown element
+        $("#PaymentTerm").rules("add", {
+            dropdownRequired: true
+        });
+
+        $('#RiskRate').mask('99.99');
+
+        $('#PaymentTerm').change(function () {
+            
+            var Sumninsured = $('#SumInsured').val();
+            var risk = $('#RiskRate').val();
+            var riskrate = risk / 100;
+            var selectedValue = $(this).val();
+            if (selectedValue == "Annual") {
+                var Basicpremium = Sumninsured * riskrate;
+            }
+            else if (selectedValue == "Termly") {
+                var Basicpremium = (parseFloat(Sumninsured * riskrate) / 3);
+            }
+            else if (selectedValue == "Quarterly") {
+                var Basicpremium = (parseFloat(Sumninsured * riskrate) / 4);
+            }
+            else if (selectedValue == "Monthly") {
+                var Basicpremium = (parseFloat(Sumninsured * riskrate) / 12);
+            }
+            var stmpduty = 0.05 * Basicpremium;
+            var totalpayable = Basicpremium + stmpduty;
+            $('#StampDuty').val(stmpduty.toFixed(2));
+            $('#TotalPremiumPayable').val(totalpayable.toFixed(2));
+
+        });
+            PolicyDate();
+
+
+        let PolicyProductList = [];
+        $('#btnadd, #btnupdate').click(function (e) {
+        
+            e.preventDefault();
+            var userId = $('#edit-id').val();
+            var PolicyClassName = $('#PolicyClassName').val();
+            var RskCoverName = $('#RskCoverName').val();
+            var RiskItems = $('#RiskItems').val();
+            var DescriptionofRiskInsured = $('#DescriptionofRiskInsured').val();
+            var RiskAddress = $('#RiskAddress').val();
+            var PolicyValidityPeriodFrom = $('#PolicyValidityPeriodFrom').val();
+            var PolicyValidityPeriodTo = $('#PolicyValidityPeriodTo').val();
+            var Currency = $('#Currency').val();
+            var SelectedCurrency = $('#Currency').val();
+            var SumInsured = $('#SumInsured').val();
+
+            var RiskRate = $('#RiskRate').val();
+            var PaymentTerm = $('#PaymentTerm').val();
+            var StampDuty = $('#StampDuty').val();
+            var TotalPremiumPayable = $('#TotalPremiumPayable').val();
+
+            if (userId) {
+               
+                updateUser(userId, PolicyClassName, RskCoverName, RiskItems, DescriptionofRiskInsured, RiskAddress, PolicyValidityPeriodFrom, PolicyValidityPeriodTo, Currency, SumInsured, RiskRate, PaymentTerm, StampDuty, TotalPremiumPayable);
+                $('#btnadd').show();
+                $('#btnupdate').hide();
+                $('#cancel-edit').hide();
+                $('#edit-id').val('');
+            } else {
+                createUser(PolicyClassName, RskCoverName, RiskItems, DescriptionofRiskInsured, RiskAddress, PolicyValidityPeriodFrom, PolicyValidityPeriodTo, Currency, SumInsured, RiskRate, PaymentTerm, StampDuty, TotalPremiumPayable);
+
+            }
+
+
+            $('#user-form')[0].reset();
+            $('#Currency').val(SelectedCurrency);
+            $('#Currency').attr('disabled', 'disabled');
+         /*   PolicyDate();*/
+
+        });
+
+        // cancel update product click
+        $('#cancel-edit').click(function () {
+            $('#user-form')[0].reset();
+            $('#btnadd').show();
+            $('#btnupdate').hide();
+            $('#cancel-edit').hide();
+            $('#edit-id').val('')
+        });
+
+
+        function createUser(PolicyClassName, RskCoverName, RiskItems, DescriptionofRiskInsured, RiskAddress, PolicyValidityPeriodFrom, PolicyValidityPeriodTo, Currency, SumInsured, RiskRate, PaymentTerm, StampDuty, TotalPremiumPayable) {
+          
+            const newUser = {
+                id: PolicyProductList.length + 1,
+                PolicyClassName: PolicyClassName,
+                RskCoverName: RskCoverName,
+                RiskItems: RiskItems,
+                DescriptionofRiskInsured: DescriptionofRiskInsured,
+                RiskAddress: RiskAddress,
+                PolicyValidityPeriodFrom: PolicyValidityPeriodFrom,
+                PolicyValidityPeriodTo: PolicyValidityPeriodTo,
+                Currency: Currency,
+                SumInsured: SumInsured,
+                RiskRate: RiskRate,
+                PaymentTerm: PaymentTerm,
+                StampDuty: StampDuty,
+                TotalPremiumPayable: TotalPremiumPayable,
+            };
+            PolicyProductList.push(newUser);
+            displayPolicyProductList();
+        }
+
+        function updateUser(userId, PolicyClassName, RskCoverName, RiskItems, DescriptionofRiskInsured, RiskAddress, PolicyValidityPeriodFrom, PolicyValidityPeriodTo, Currency, SumInsured, RiskRate, PaymentTerm, StampDuty, TotalPremiumPayable) {
+           
+            const userToUpdate = PolicyProductList.find((u) => u.id == userId);
+            if (userToUpdate) {
+                userToUpdate.PolicyClassName = PolicyClassName;
+                userToUpdate.RskCoverName = RskCoverName;
+                userToUpdate.RiskItems = RiskItems;
+                userToUpdate.DescriptionofRiskInsured = DescriptionofRiskInsured;
+                userToUpdate.RiskAddress = RiskAddress;
+                userToUpdate.PolicyValidityPeriodFrom = PolicyValidityPeriodFrom;
+                userToUpdate.PolicyValidityPeriodTo = PolicyValidityPeriodTo;
+                userToUpdate.Currency = Currency;
+                userToUpdate.SumInsured = SumInsured;
+                userToUpdate.RiskRate = RiskRate;
+                userToUpdate.PaymentTerm = PaymentTerm;
+                userToUpdate.StampDuty = StampDuty;
+                userToUpdate.TotalPremiumPayable = TotalPremiumPayable;
+
+            }
+
+
+            displayPolicyProductList();
+        }
+
+        function displayPolicyProductList() {
+           r
+            const userList = $('#user-list table tbody ');
+            userList.empty();
+            PolicyProductList.forEach((user) => {
+                const listItem = `<tr><td>${user.PolicyClassName}</td><td>${user.RskCoverName}</td><td>${user.RiskItems}</td><td>${user.DescriptionofRiskInsured}</td><td>${user.RiskAddress}</td><td>${user.PolicyValidityPeriodFrom}</td><td>${user.PolicyValidityPeriodTo}</td><td>${user.Currency}</td><td>${user.SumInsured}</td><td>${user.RiskRate}</td><td>${user.PaymentTerm}</td><td> ${user.StampDuty}</td><td>${user.TotalPremiumPayable}</td><td class="text-right"><button class="edit-button btn-sm btn btn-primary" data-id="${user.id}"><i class="fa fa-pencil" aria-hidden="true"></i></button>  <button class="delete-button btn-sm btn btn-danger" data-id="${user.id}"><i class="fa fa-trash" aria-hidden="true"></i></button></td></tr>`;
+                userList.append(listItem);
+
+                if ($("tbody tr").length > 0) {
+                    $('.Policylistheader').css("display", "table-header-group")
+                    $('.classSubmit').css("display", "table-header-group")
+
+
+                }
+            });
+
+            //edit button click function
+            $('.edit-button').click(function () {
+              
+                const userId = $(this).data('id');
+                const userToEdit = PolicyProductList.find((u) => u.id == userId);
+                if (userToEdit) {
+                    $('#edit-id').val(userToEdit.id);
+                    $('#PolicyClassName').val(userToEdit.PolicyClassName);
+                    $('#RskCoverName').val(userToEdit.RskCoverName);
+                    $('#RiskItems').val(userToEdit.RiskItems);
+                    $('#DescriptionofRiskInsured').val(userToEdit.DescriptionofRiskInsured);
+                    $('#RiskAddress').val(userToEdit.RiskAddress);
+                    $('#PolicyValidityPeriodFrom').val(userToEdit.PolicyValidityPeriodFrom);
+                    $('#PolicyValidityPeriodTo').val(userToEdit.PolicyValidityPeriodTo);
+                    $('#Currency').val(userToEdit.Currency);
+                    $('#SumInsured').val(userToEdit.SumInsured);
+                    $('#RiskRate').val(userToEdit.RiskRate);
+                    $('#StampDuty').val(userToEdit.StampDuty);
+                    $('#PaymentTerm').val(userToEdit.PaymentTerm);
+                    $('#TotalPremiumPayable').val(userToEdit.TotalPremiumPayable);
+
+                    $('#btnadd').hide();
+                    $('#btnupdate').show();
+                    $('#cancel-edit').show();
+                }
+            });
+
+
+            $('.delete-button').click(function () {
+                const userId = $(this).data('id');
+                const userIndex = PolicyProductList.findIndex((u) => u.id == userId);
+                if (userIndex !== -1) {
+                    PolicyProductList.splice(userIndex, 1);
+                    displayPolicyProductList();
+                }
+                if ($("tbody tr").length < 1) {
+                    $('.Policylistheader').css("display", "none")
+                    $('.classSubmit').css("display", "none")
+                }
+            });
+        }
+
+        var model = {
+            UserId: "10",
+            PolicyProductList: PolicyProductList,
+
+        };
+
+        $('#AddId').click(function () {
+        
+            $.ajax({
+                url: '/NonMotorCustomers/QuotationProduct',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (data) {
+                    
+                    window.location.href = '@Url.Action("GenerateQuotation", "NonMotorCustomers")/' + data;
+
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+
+
+
+
+    $('#btnNext').click(function () {
+       
+        var selectedValue = $('input[name="CustomerType"]:checked').val();
+        if (selectedValue === "Individual") {
+            var returnValue;
+            var name = document.getElementById("FirstName").value;
+            var SurName = document.getElementById("SurName").value;
+            var ContactPersonEmail = document.getElementById("EmailId").value;
+            var PhysicalAddress = document.getElementById("PhysicalAddress").value;
+            var ContactNumber = document.getElementById("ContactNumber").value;
+            returnValue = true;
+            if (name.trim() == "") {
+                document.getElementById("reqTxtFirstName").innerHTML = "*First Name is required.";
+                returnValue = false;
+            }
+            if (SurName.trim() == "") {
+                document.getElementById("reqTxtSurName").innerHTML = "* Last Name is required.";
+                returnValue = false;
+            }
+            if (ContactPersonEmail.trim() == "") {
+                document.getElementById("reqTxtContactPersonEmail").innerHTML = "* Email is required.";
+                returnValue = false;
+            }
+            if (PhysicalAddress.trim() == "") {
+                document.getElementById("reqTxtPhysicalAddress").innerHTML = "* Address is required.";
+                returnValue = false;
+            }
+            if (ContactNumber.trim() == "") {
+                document.getElementById("reqTxtContactNumber").innerHTML = "* Contact Number is required.";
+                returnValue = false;
+            }
+        }
+
+        if (selectedValue === "Business") {
+         
+            var returnValue;
+            var BusinessName = document.getElementById("BusinessName").value;
+            var BusinessPartnerNumber = document.getElementById("BusinessPartnerNumber").value;
+            var BusinessAddress = document.getElementById("BusinessAddress").value;
+            var BusinessPhoneNumber = document.getElementById("BusinessPhoneNumber").value;
+            var ContactPersonName = document.getElementById("ContactPersonName").value;
+            var ContactPersonPhoneNumber = document.getElementById("ContactPersonPhoneNumber").value;
+            var ContactPersonEmail = document.getElementById("ContactPersonEmail").value;
+            returnValue = true;
+            if (BusinessName.trim() == "") {
+                document.getElementById("reqTxtBusinessName").innerHTML = "*BusinessName is required.";
+                returnValue = false;
+            }
+            if (BusinessPartnerNumber.trim() == "") {
+                document.getElementById("reqTxtBusinessPartnerNumber").innerHTML = "*BusinessPartnerNumber is required.";
+                returnValue = false;
+            }
+            if (BusinessAddress.trim() == "") {
+                document.getElementById("reqTxtBusinessAddress").innerHTML = "*BusinessAddress is required.";
+                returnValue = false;
+            }
+            if (BusinessPhoneNumber.trim() == "") {
+                document.getElementById("reqTxtBusinessPhoneNumber").innerHTML = "*BusinessPhoneNumber is required.";
+                returnValue = false;
+            }
+            if (ContactPersonName.trim() == "") {
+                document.getElementById("reqTxtContactPersonName").innerHTML = "*ContactPersonName is required.";
+                returnValue = false;
+            }
+
+            if (ContactPersonPhoneNumber.trim() == "") {
+                document.getElementById("reqTxtContactPersonPhoneNumber").innerHTML = "*ContactPersonPhoneNumber is required.";
+                returnValue = false;
+            }
+
+            if (ContactPersonEmail.trim() == "") {
+                document.getElementById("reqTxtContactPersonEmail").innerHTML = "*ContactPersonEmail is required.";
+                returnValue = false;
+            }
+
+
+        }
+            if (returnValue != false || returnValue != false) {
+
+                var FirstName = $("#FirstName").val();
+                var LastName = $("#SurName").val();
+                var Email = document.getElementById("EmailId").value;
+                var ContactNumber = $("#ContactNumber").val();
+                var PhysicalAddress = $("#PhysicalAddress").val();
+                var BusinessName = $("#BusinessName").val();
+                var BusinessPartnerNumber = $("#BusinessPartnerNumber").val();
+                var BusinessAddress = $("#BusinessAddress").val();
+                var BusinessPhoneNumber = $("#BusinessPhoneNumber").val();
+                var ContactPersonName = $("#ContactPersonName").val();
+                var ContactPersonPhoneNumber = $("#ContactPersonPhoneNumber").val();
+                var ContactPersonEmail = $("#ContactPersonEmail").val();
+
+                $(".quotationproductdetails").removeClass("disabled").addClass("active")
+
+                var model = {
+                    UserId: "10",
+                    firstname: FirstName,
+                    surname: LastName,
+                    email: Email,
+                    contactnumber: ContactNumber,
+                    physicaladdress: PhysicalAddress,
+                    BusinessName: BusinessName,
+                    BusinessPartnerNumber: BusinessPartnerNumber,
+                    BusinessAddress: BusinessAddress,
+                    BusinessPhoneNumber: BusinessPhoneNumber,
+                    ContactPersonName: ContactPersonName,
+                    ContactPersonPhoneNumber: ContactPersonPhoneNumber,
+                    ContactPersonEmail: ContactPersonEmail  
+                };
+
+                $.ajax({
+                    url: '@Url.Action("QuotationGenerate", "NonMotorCustomers")',
+                    type: 'POST',
+                    data: JSON.stringify(model),
+                    contentType: 'application/json',
+                    success: function () {
+                        $('#Custdetails').hide();
+                        $('#Productdetails').show();
+                        event.preventDefault();
+
+                    },
+                    error: function (xhr, status, error) {
+                   
+                        console.error(xhr.statusText);
+                    }
+                });
+            }
+    });
+
+
+  $('#PolicyClassName').change(function () {
+     
+        var selectedValue = $(this).val();
+        if (selectedValue) {
+            populateSecondDropdown(selectedValue);
+        } else {
+            $('#RskCoverName').empty();
+        }
+    });
+
+
+    function populateSecondDropdown(selectedValue) {
+    
+        $.ajax({
+            url: '@Url.Action("GetRiskCover", "NonMotorCustomers")',
+            type: 'GET',
+            data: { selectedValue: selectedValue },
+            dataType: 'json',
+            success: function (data) {
+          
+                RiskCoverDropdown(data);
+            },
+            error: function (xhr, status, error) {
+             
+                console.error(xhr.statusText);
+            }
+        });
+    }
+
+
+    function RiskCoverDropdown(options) {
+      
+        var secondDropdown = $('#RskCoverName');
+        secondDropdown.empty();
+        secondDropdown.append($('<option></option>').val('').text('Select Option'));
+        $.each(options, function (index, getoption) {
+
+            var optionhtml = '<option value="' + getoption.Id + '">' + getoption.Rskcover + '</option>';
+            secondDropdown.append(optionhtml);
+        });
+    }
+
+
+
+    $('#RskCoverName').change(function () {
+    
+        var selectedValue = $(this).val();
+        if (selectedValue) {
+            RiskItemDropdown(selectedValue);
+        } else {
+            $('#RiskItems').empty();
+        }
+    });
+
+
+
+     function RiskItemDropdown(selectedValue) {
+  
+        $.ajax({
+            url: '@Url.Action("GetRiskItems", "NonMotorCustomers")',
+            type: 'GET',
+            data: { selectedValue: selectedValue },
+            dataType: 'json',
+            success: function (data) {
+              
+                RiskItem(data);
+            },
+            error: function (xhr, status, error) {
+              
+                console.error(xhr.statusText);
+            }
+        });
+    }
+
+    function RiskItem(options) {
+       r
+        var thirdDropdown = $('#RiskItems');
+        thirdDropdown.empty();
+        thirdDropdown.append($('<option></option>').val('').text('Select Option'));
+        $.each(options, function (index, Getoption) {
+      
+            var optionhtml = '<option value="' + Getoption.Id + '">' + Getoption.RiskItemName + '</option>';
+            thirdDropdown.append(optionhtml);
+        });
+    }
+
+    $('#btnadd').click(function () {
+        var returnValue;
+        var name = document.getElementById("PolicyClassName").value;
+        var address = document.getElementById("RskCoverName").value;
+   
+        var selectedValue = $('#PaymentTerm').val();
+        if (selectedValue != "0")
+        {
+        $('#PaymentTerm option').prop('disabled', true); // Disable all options
+        $('#PaymentTerm option[value="0"]').prop('disabled', false); // Enable "Select Payment Term"
+        $('#PaymentTerm option[value="' + selectedValue + '"]').prop('disabled', false); // Enable selected option
+        }
+        returnValue = true;
+        if (name.trim() == "") {
+            document.getElementById("reqTxtPolicyId").innerHTML = "* Name is required.";
+            returnValue = false;
+        }
+        if (address.trim() == "") {
+            document.getElementById("reqTxtAddress").innerHTML = "* Address is required.";
+            returnValue = false;
+        }
+        return returnValue;
+    });
+
+        function PolicyDate() {
+            
+            //$('#datetimepicker1').datetimepicker({
+            //    format: 'MM/D/YYYY',
+            //    minDate: new Date()
+            //});
+
+            //var dateTomorrow = new Date();
+            //dateTomorrow.setDate(dateTomorrow.getDate() + 1);
+            //$('#datetimepicker2').datetimepicker({
+            //    format: 'MM/D/YYYY',
+            //    minDate: dateTomorrow,
+            //    defaultDate: false
+            //});
+        };
+
+
+
+
+        function Policyschedule(data) {
+            var id = data;
+         
+            $.ajax({
+                url: '/NonMotorCustomers/PolicySchedule/',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: id },
+                success: function (data) {
+                
+                   window.location.href = '@Url.Action("GenerateQuotation", "NonMotorCustomers")/'+ id;
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+    }
+
+
+    $('input[name="CustomerType"]').on('change', function () {
+      
+        var selectedValue = $('input[name="CustomerType"]:checked').val();
+
+       
+        if (selectedValue === "Business") {
+            $('#BusinessId').show();
+            $('#IndividualId').hide();
+        } else if (selectedValue === "Individual") {
+            $('#BusinessId').hide();
+            $('#IndividualId').show();
+        }
+    });
+
+</script>
+
+
+
+

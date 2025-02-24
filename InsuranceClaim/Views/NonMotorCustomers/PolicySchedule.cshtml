@@ -1,0 +1,237 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "PolicySchedule";
+    var customerdata = @ViewBag.details;
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+<div id="myBillingArea">
+    <table border="0" cellpadding="0" cellspacing="0" width="1200" style="border-collapse: collapse; background-color: white; margin: auto; color: #000">
+        <tbody>
+            <tr>
+                <td colspan="8" valign="top" style="padding-top:50px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th colspan="8">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">
+                                                    <a href=""><img src="/Images/geneinsure-logo5.png" alt="" width="150"></a>
+                                                </th>
+                                                <th width="50%" style="text-align:right;">
+                                                    <div id="name">
+                                                        @if (!string.IsNullOrWhiteSpace(@ViewBag.details.BusinessName))
+                                                        {
+                                                            <span class="pdftype" style="text-transform: Capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #424242;">@ViewBag.details.BusinessName </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="pdftype" style="text-transform: Capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #424242;">@ViewBag.details.CustomerName </span>
+                                                        }
+                                                    </div>
+                                                    <div>
+                                                        @if (!string.IsNullOrWhiteSpace(customerdata.BusinessAddress))
+                                                        {
+                                                            <span style=" text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #424242;">@customerdata.BusinessAddress</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style=" text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #424242;">@customerdata.PhysicalAddress</span>
+                                                        }
+                                                    </div>
+                                                    <div>
+                                                        @if (!string.IsNullOrWhiteSpace(customerdata.PolicyNumber))
+                                                        {
+                                                            <span style=" text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #424242;">@customerdata.PolicyNumber</span>
+                                                        }
+
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="8" style="padding-top:50px;">
+                                                    <h4>POLICY SCHEDULE</h4>
+                                                    <br />
+                                                    <table border="1" cellpadding="0" cellspacing="0" width="100%" bordercolor="#ccc" style="border-collapse:collapse;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 180px; ">Insurance Policy Class</th>
+                                                                <th style="text-transform: capitalize;font-weight:  600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242;">Risk cover</th>
+                                                                <th style="text-transform: capitalize;font-weight:  600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242;">Risk item</th>
+                                                                <th style="text-transform: capitalize;font-weight:  600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242;">Risk Description </th>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 130px;">Payment Term</th>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 130px;">Currency</th>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 150px;">Sum Insured</th>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 100px;">Rate</th>
+                                                                <th style="text-transform: capitalize; font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; width: 100px;">Stamp Duty</th>
+                                                                <th style="text-transform: capitalize;font-weight:  600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242; width:100px;">Premium</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.customerdetails)
+                                                            {
+                                                                <tr>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.PolicyClassName</td>
+
+
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.RiskCoverName</td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">
+                                                                        @item.RiskItemName
+                                                                        <p>
+                                                                            <strong>Risk Address:</strong>
+                                                                            <br /><span class="riskaddress">@item.RiskAddress</span>
+                                                                        </p>
+                                                                        <p>
+                                                                            <strong>Cover Period: </strong><span style="white-space: nowrap;">@item.PolicyValidityPeriodFrom - @item.PolicyValidityPeriodTo</span>
+
+                                                                            @*<strong>Cover Period: </strong><span>@item.PolicyValidityPeriodFrom - @item.PolicyValidityPeriodTo</span>*@
+                                                                        </p>
+
+                                                                    </td>
+
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.RiskDescription</td>
+
+                                                                    @*<td>@item.RiskAddress</td>*@
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.PaymentTerm</td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.Currency</td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.SumInsured</td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">
+                                                                        @*@item.RiskRate*@
+                                                                        @{
+                                                                            string riskRate = item.RiskRate;
+                                                                            if (!string.IsNullOrEmpty(riskRate))
+                                                                            {
+                                                                                @*@riskRate<span>%</span>*@
+                                                                                <span style="margin: 0 2px;">@riskRate %</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @:&nbsp;
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.StampDuty</td>
+                                                                    <td valign="top" style="font-family: Arial, sans-serif; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #000000;">@item.TotalPremiumPayable</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr style="background:#fff">
+                                                                <td colspan="5" style="padding: 10px 6px; font-size: 13px; border-right-color: #fff;"></td>
+                                                                <td style=" font-size: 13px; font-weight: 500">Total Sum Insured</td>
+                                                                <td style="padding: 10px 6px; font-size: 13px; font-weight:600;">
+                                                                    @{
+                                                                        string Totalsum = ViewBag.Totalsum.ToString("#,##0.00");
+                                                                        if (!string.IsNullOrEmpty(Totalsum))
+                                                                        {
+                                                                            <span>$</span>@Totalsum;
+                                                                        }
+                                                                    }
+                                                                </td>
+                                                                <td colspan="2" style="padding:10px 6px; font-size:13px; font-weight:500; text-align:right">Total Premium</td>
+                                                                <td style="padding: 10px 6px; font-size: 13px; font-weight: 600;">
+                                                                    @{
+                                                                        string Toalpre = ViewBag.Toalpre.ToString("#,##0.00");
+                                                                        if (!string.IsNullOrEmpty(Toalpre))
+                                                                        {
+                                                                            <span>$</span>@Toalpre
+                                                                        }
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="quotes-button-section">
+    <div class="container">
+        <div class="quotes-button-list text-center">
+            <ul class="list-inline">
+                <li><button class="btn" id="savepdf" onclick="downloadPDF()" type="button">Save As PDF</button></li>
+                <li><button class="btn btnred" type="button" onclick="window.location.href='@Url.Action("ViewCustomer", "NonMotorCustomers", new { Id = "" }, protocol: Request.Url.Scheme)'">Back</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/html2pdf.bundle.min.js"></script>
+<script src="~/Scripts/jspdf.umd.min.js"></script>
+<script src="~/Scripts/html2canvas.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        event.preventDefault();
+    });
+
+
+
+
+
+    function downloadPDF() {
+        var pdfname = $(".pdftype").text();
+        const contentElement = document.getElementById('myBillingArea');
+        const fontSize = calculateFontSizeToFit(contentElement);
+        contentElement.style.fontSize = fontSize + 'px';
+        html2pdf(contentElement, {
+            margin: [10, 10, 10, 10], 
+            filename: "POLICY_" + pdfname + ".pdf",
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [400, 390], orientation: 'portrait' }, 
+            onePage: false,
+            output: 'save',
+            onPageCreated: function (page, options) {
+                if (page === 1) {
+                    const header = document.createElement('div');
+                    header.textContent = 'Polycyschedule Header';
+                    header.style.textAlign = 'center';
+                    header.style.fontSize = '17px';
+                    contentElement.insertBefore(header, contentElement.firstChild);
+                } else {
+                    options.margin = [20, 20, 20, 20]; // Increase margins
+                    const newFontSize = calculateFontSizeToFit(contentElement);
+                    contentElement.style.fontSize = newFontSize + 'px';
+                }
+            }
+        });
+        window.scrollTo(0, 0);
+    }
+
+
+
+    function calculateFontSizeToFit(element) {
+        const maxHeight = 1041;
+        const originalFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+        let currentHeight = element.offsetHeight;
+        let fontSize = originalFontSize;
+        while (currentHeight > maxHeight && fontSize > 1) {
+            fontSize -= 3;
+            element.style.fontSize = fontSize + 'px';
+            currentHeight = element.offsetHeight;
+        }
+
+        return fontSize;
+    }
+
+
+
+</script>

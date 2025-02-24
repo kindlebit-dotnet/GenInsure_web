@@ -1,0 +1,410 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "ExistingGenerateQuotation";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    var customerdata = @ViewBag.data;
+    var UserId = @ViewBag.UserId;
+}
+
+<style>
+    .top-header-section, .footer-section {
+        display: none;
+    }
+
+    .prepared-by {
+        text-transform: capitalize;
+        margin: 8px 0 0 -109px;
+        font-size: 14px;
+        color: #000;
+        font-weight:400;
+        display: inline-block;
+        font-style: italic;
+    }
+</style>
+<div id="contentdiv">
+    <table border="0" id="content" cellpadding="0" cellspacing="0" width="1200" style="width:1400px; border-collapse: collapse; background-color: white; margin:0 auto; color: #000">
+        <tbody>
+            <tr>
+                <td colspan="10" valign="top" style="padding:0 15px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th colspan="10">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">
+                                                    <a href="">
+                                                        <img width="250" src="/Images/geneinsure-logo5.png" />
+                                                    </a>
+                                                </th>
+                                                <th width="50%" align="right">
+                                                    <div style="text-align:right">
+                                                        <p style="font-size: 13px; margin:0 0 5px">Quotation: <span style="text-transform:uppercase;color: #686868;">@ViewBag.data.QuotationId</span></p>
+                                                        <p style="font-size: 13px; margin: 0 0 5px">Date: <span style="text-transform:uppercase;color: #686868;">@DateTime.Now.ToString("dd/MM/yyyy")</span></p>
+                                                        <p style="font-size: 13px; margin: 0 0 5px">Valid Till: <span style="text-transform:uppercase;color: #686868;">@(DateTime.Now.AddDays(30).ToString("dd/MM/yyyy"))</span></p>
+                                                        <p style="font-size: 13px;">Currency: <span style="text-transform:uppercase;color: #686868;">@ViewBag.currency</span></p>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2">
+                                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight:500; font-size: 13px; color:#000000; display: inline-block; ">Quotation to: </span>
+                                                    <div style="text-align:left">
+                                                        <div>
+                                                            <div id="name">
+                                                                @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessName))
+                                                                {
+                                                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.BusinessName </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.FirstName @ViewBag.data.LastName</span>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessAddress))
+                                                        {
+                                                            <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.BusinessAddress</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.PhysicalAddress</span>
+                                                        }
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            @*<tr>
+                                                    <th colspan="2" style="font-weight: 400; font-weight: 400; font-size: 13px; color: #424242; ">Highlands, Harare</th>
+                                                </tr>*@
+                                            <tr>
+                                                <th colspan="2">
+                                                    @if (@ViewBag.data.ContactNumber != null)
+                                                    {
+                                                        <span style="float: left; text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 400; font-size: 13px; color: #424242;">@ViewBag.data.ContactNumber</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="float: left; text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 400; font-size: 13px; color: #424242;">@ViewBag.data.BusinessPhoneNumber</span>
+                                                    }
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="10" valign="top" style="padding-top:50px">
+                                    <table id="tableId" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Policy Class</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Risk cover</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Risk item</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Payment Term</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Currency</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Sum Insured</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Rate</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px" id="thAnnualId">Annual Premium</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px" id="thQuart">Quarterly Premium</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px" id="thTerm">Termly Premium</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px" id="thMonth">Monthly Premium</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in Model.customerdetails)
+                                            {
+                                                <tr>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.PolicyClassName</td>
+
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.RiskCoverName</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">
+
+                                                        @item.RiskItemName
+                                                        <p><strong>Risk Address:</strong> @item.RiskAddress</p>
+
+                                                    </td>
+
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.PaymentTerm</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.Currency</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.SumInsured</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">
+
+                                                        @{
+                                                            string riskRate = item.RiskRate;
+                                                            if (!string.IsNullOrEmpty(riskRate))
+                                                            {
+                                                                @riskRate<span>%</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                @:&nbsp;
+                                                            }
+                                                        }
+                                                    </td>
+
+                                                    @*<td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.BasicPremium</td>*@
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.AnnualPremium</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.QuarterlyPremium</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.TerminalPremium </td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.MonthlyPremium</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot style="background:#fff">
+                                            <tr>
+                                                <td valign="top" colspan="7" style="font-weight:600;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;color: #424242;">Total Premium</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Annualtotalpayble</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Quarterlytotalpayble</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Termlytotalpayble </td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Monthlytotalpayble </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" colspan="7" style="font-weight:600; font-size: 13px; line-height: 16px; padding: 10px 6px; border-bottom: 1px solid #ccc; color: #424242;">Stamp Duty (5%)</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Annualstampvalue</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Quarterlystampvalue</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Termlystampvalue</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Monthlystampvalue</td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" colspan="7" style="font-weight:600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242;">Total Payable</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@(Model.Annualtotalpayble + Model.Annualstampvalue)</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@(Model.Quarterlytotalpayble + Model.Quarterlystampvalue)</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@(Model.Termlytotalpayble+ Model.Termlystampvalue)</td>
+                                                <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@(Model.Monthlytotalpayble+ Model.Monthlystampvalue)</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td style="padding-top:150px;">
+                    <div class="container" id="QuotationPrepared" style="background-color: white;">
+                        <span id="preparedBySpan" class="prepared-by">Prepared By : @ViewBag.data.LoggedInUser</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<br />
+
+<div class="quotes-button-section">
+    <div class="container">
+        <div class="quotes-button-list text-center">
+            <ul class="list-inline">
+                <li><button class="btn " onclick="SaveAsPdf()" type="button">Save As PDF</button></li>
+                <li><button class="btn " onclick="Pdfdetails()" id="btnSendemail" type="button">Send Email</button></li>
+                <li><button class="btn" type="button" onclick="window.location.href='@Url.Action("GenerateInvoice", "BrokerNonmoter", new { Id =@ViewBag.data.Id }, protocol: Request.Url.Scheme)'">Convert Quotation To Invoice</button></li>
+                @*<li><a href="@Url.Action("ViewCustomer", "NonMotorCustomers", new { Id = 2026 }, protocol: Request.Url.Scheme)" style="font-size:19px;" class="btn btn-danger">Back</a></li>*@
+            <li> <button class="btn btnred" type="button" onclick="window.location.href='@Url.Action("ViewCustomer", "NonMotorCustomers", new { Id =2026 }, protocol: Request.Url.Scheme)'">Back</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/Scripts/html2pdf.bundle.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        // Iterate through each column header (skip the first row)
+        $('#tableId thead tr th').each(function (index) {
+            // Check if all cells in this column have null values
+            var allCellsNull = true;
+
+            $('#tableId tbody tr').each(function () {
+            
+                var cellText = $(this).find('td:eq(' + index + ')').text().trim();
+                if (cellText !== "0") {
+                    allCellsNull = false;
+                    return false; // Exit the loop if a non-null cell is found
+                }
+            });
+
+            // Hide the column header and all cells if all cells are null
+            if (allCellsNull) {
+            
+                $(this).hide();
+                $('#tableId tbody tr').each(function () {
+                    $(this).find('td:eq(' + index + ')').hide();
+                });
+            }
+        });
+
+        $('#tableId tfoot tr:nth-child(1) td').each(function (index) {
+       
+            var columnIndex = index + 1; // Index is 0-based, but nth-child is 1-based
+
+            // Check if all cells in this column are empty
+            var allCellsNull = true;
+            $('#tableId tfoot tr:not(:first-child) td:nth-child(' + columnIndex + ')').each(function () {
+              
+                var cellText = $(this).text().trim();
+                if (cellText !== "0") {
+                    allCellsNull = false;
+                    return false; // Exit the loop if a non-null cell is found
+                }
+            });
+
+            // Hide the entire column in the <tfoot> if all cells are null
+            if (allCellsNull) {
+              
+                $('#tableId tfoot tr').each(function () {
+                    $(this).find('td:nth-child(' + columnIndex + ')').hide();
+                });
+            }
+        });
+
+
+    });
+
+    $.validator.addMethod("dropdownRequired", function (value, element) {
+        return value != "0"; // Change "0" to the value of the default option in your dropdown.
+    }, "Please select a payment term.");
+
+    // Apply the custom rule to the dropdown element
+    $("#PaymentTerm").rules("add", {
+        dropdownRequired: true
+    });
+
+    document.getElementById("SumInsured").addEventListener("input", clearPaymentTerm);
+    document.getElementById("RiskRate").addEventListener("input", clearPaymentTerm);
+
+
+    function clearPaymentTerm() {
+        // Get the Payment Term dropdown
+    
+        var paymentTermDropdown = document.getElementById("PaymentTerm");
+
+        // Unselect the currently selected option (set it to the default value)
+        paymentTermDropdown.value = "0";
+        document.getElementById("StampDuty").value = "";
+        document.getElementById("TotalPremiumPayable").value = "";
+    }
+
+
+
+
+    function SaveAsPdf() {
+     
+        var pdfname = $(".pdftype").text();
+        const contentElement = document.getElementById('contentdiv');
+        const preparedBySpan = document.getElementById('preparedBySpan');
+        const originalMarginLeft = preparedBySpan.style.marginLeft;
+
+        preparedBySpan.style.marginLeft = '-15px';
+
+        html2pdf(contentElement, {
+            margin: [10, 10, 10, 10],
+            filename: pdfname + ".pdf",
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [300, 210], orientation: 'landscape' },
+        }).then(() => {
+            preparedBySpan.style.marginLeft = originalMarginLeft;
+        });
+    }
+
+
+
+    function printPdf(callback) {
+
+        var currentTimestamp = new Date().getTime();
+        var randomSuffix = Math.floor(Math.random() * 10000);
+        var FileName = "PDF_" + currentTimestamp + "_" + randomSuffix + ".pdf";
+        var HTML_Width = $("#content").width();
+        var HTML_Height = $("#content").height();
+        var top_left_margin = 15;
+        var PDF_Width = HTML_Width + (top_left_margin * 2);
+        var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+        var canvas_image_width = HTML_Width;
+        var canvas_image_height = HTML_Height;
+        var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+        html2canvas($("#content")[0]).then(function (canvas) {
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+
+            for (var i = 1; i <= totalPDFPages; i++) {
+                pdf.addPage(PDF_Width, PDF_Height);
+                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 3), canvas_image_width, canvas_image_height);
+            }
+
+
+            var pdfDataUri = pdf.output('dataurlstring');
+
+            // Remove metadata and get only the base64 data part
+            var base64Data = pdfDataUri.split(',')[1];
+
+            // Send the base64 data to the server using AJAX
+            $.ajax({
+                type: "POST",
+                url: "/NonMotorCustomers/SavePdf",
+                data: { pdfDataUri: base64Data, fileName: FileName },
+                success: function (response) {
+             
+                    if (response.success) {
+                        //alert("PDF saved successfully.");
+                    } else {
+                        toastr.error("An error occurred while saving the PDF.");
+                    }
+                    callback(pdfDataUri, FileName);
+                },
+                error: function () {
+                    toastr.error("An error occurred while saving the PDF.");
+
+                }
+            });
+        });
+    }
+
+
+    function Pdfdetails() {
+      
+    var id = @ViewBag.UserId;
+       
+    printPdf(function (pdfDataUri, fileName) {
+        generateAndSendPdf(id, pdfDataUri, fileName);
+    });
+}
+
+
+    function generateAndSendPdf(id, pdfDataUri, fileName) {
+    var id = @ViewBag.UserId;
+    
+    $.ajax({
+        url: '/NonMotorCustomers/BrokerSendPdfEmail/',
+        type: 'POST',
+        data: { id: id, pdfDataUri: pdfDataUri, fileName: fileName},
+        success: function (response) {
+            if (response.success) {
+                toastr.success("Email Sent Successfully!!");
+            } else {
+                // Handle failure (e.g., show an error message)
+                toastr.error("Email Sent Failed !!");
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+
+</script>
+

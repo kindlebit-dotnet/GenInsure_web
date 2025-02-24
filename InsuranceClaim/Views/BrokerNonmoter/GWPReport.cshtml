@@ -1,0 +1,237 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "GWPReport";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="avancedclass productsave-section GrossWrittenPremiumReport">
+    <div class="container-fluid" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>GWP Summary Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<span>
+                            <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                        </span>*@
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("GWPReport", "BrokerNonmoter", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    <div class='input-group'>
+                                        @Html.TextBoxFor(m => m.FormDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "From Date", @id = "FormDate", @type = "date", style = "width: 350px;" })
+                                        @Html.ValidationMessageFor(m => m.FormDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    <div class='input-group'>
+                                        @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "End Date", @id = "EndDate", @type = "date", style = "width: 350px;" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-select">
+                                <div class="form-group">
+                                    <div class="input-group" style="width: 350px;">
+                                        @Html.DropDownListFor(m => m.Currency, new SelectList(new[]
+                                        {
+                                            new SelectListItem { Text = "ZiG", Value = "ZiG" },
+                                            new SelectListItem { Text = "USD", Value = "USD" }
+                                            // Add more currency options as needed
+                                        }, "Value", "Text"), "Select Currency", new { @class = "form-control", @id = "CurrencyselectId" })
+                                        @Html.ValidationMessageFor(m => m.Currency, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="clearForm();" class="btn btn-danger">Clear Search</button></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <table class="table" id="gwpTable">
+                    <thead>
+                        <tr>
+                            <th>Date Created</th>
+                            <th>Policy Number</th>
+                            <th>Customer Name</th>
+                            <th>Invoice Number</th>
+                            <th>Currency</th>
+                            <th>Payment Term</th>
+                            <th>Total Sum Insured</th>
+                            <th>Total Premium</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.customerdetails)
+                        {
+                            <tr>
+                                <td>@item.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                <td>@item.PolicyNumber</td>
+
+                                <td>@item.FirstName</td>
+                                <td>@item.InvoiceNumber</td>
+
+                                <td>@item.Currency</td>
+                                <td>@item.PaymentTerm</td>
+                                <td id="SumInsured">@item.SumInsured</td>
+                                <td id="TotalPremiumPayable">@item.TotalPremiumPayable</td>
+                                <td>@item.UserId</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tbody>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Grand Total:</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td id="grandTotalSumInsured"></td>
+                            <td id="grandTotalTotalPremium"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        }
+    </div>
+
+</div>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script>
+
+    $(document).ready(function () {
+        ApplyDataTable();
+        function ApplyDataTable() {
+            $('#gwpTable').dataTable({
+                "order": [0, "desc"],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0, 1, 3] },
+                ]
+            });
+        }
+        function calculateGrandTotal() {
+            var sumInsuredCells = document.querySelectorAll('#SumInsured');
+            var totalPremiumCells = document.querySelectorAll('#TotalPremiumPayable');
+            var grandTotalSumInsured = 0;
+            var grandTotalTotalPremium = 0;
+
+            for (var i = 0; i < sumInsuredCells.length; i++) {
+                grandTotalSumInsured += parseFloat(sumInsuredCells[i].textContent);
+                grandTotalTotalPremium += parseFloat(totalPremiumCells[i].textContent);
+            }
+
+            return { sumInsured: grandTotalSumInsured, totalPremium: grandTotalTotalPremium };
+        }
+
+        function updateGrandTotalDisplay() {
+            var grandTotal = calculateGrandTotal();
+            document.getElementById('grandTotalSumInsured').innerText = '' + grandTotal.sumInsured.toFixed(2);
+            document.getElementById('grandTotalTotalPremium').innerText = '' + grandTotal.totalPremium.toFixed(2);
+        }
+
+        updateGrandTotalDisplay();
+        function formatDecimal(selector) {
+            $(selector).each(function () {
+                var value = parseFloat($(this).text());
+
+                if (!isNaN(value)) {
+                    // Format the value to always have two decimal places and trailing zeroes
+                    var formattedValue = value.toFixed(2);
+
+                    // Append ".00" if there is no decimal point
+                    if (formattedValue.indexOf('.') === -1) {
+                        formattedValue += '.00';
+                    }
+
+                    $(this).text(formattedValue);
+                }
+            });
+        }
+
+
+        var selectors = ['#SumInsured'];
+        var totalPremiumSelectors = ['#TotalPremiumPayable'];
+
+
+        selectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+        totalPremiumSelectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+
+        $(".tablesorter").tablesorter({
+            headers: {
+                2: { sorter: false },
+                4: { sorter: false },
+                6: { sorter: false },
+                9: { sorter: false },
+            }
+        });
+
+        $("#generateExcel").click(function () {
+
+        });
+
+        if (sessionStorage.getItem('formCleared') === 'true') {
+            $('#FormDate').val('');
+            $('#EndDate').val('');
+            sessionStorage.removeItem('formCleared');
+        }
+    });
+
+    function clearForm() {
+
+        sessionStorage.setItem('formCleared', 'true');
+        window.location.href = "/BrokerNonmoter/GWPReport";
+    }
+    $(document).on('click', '.paginate_button', function () {
+        updateGrandTotalDisplay();
+    });
+
+</script>
+
+
+

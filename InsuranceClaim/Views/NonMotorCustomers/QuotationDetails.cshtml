@@ -1,0 +1,1112 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "QuotationDetails";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    var customerdata = @ViewBag.Quotation;
+}
+
+
+
+<div class="container-pdf" style="padding:50px 0">
+    <div class="" style="margin:15px 0 0px">
+        <table border="0" cellpadding="0" cellspacing="0" width="1200" style="border-collapse:collapse; margin:0 auto; border:1px solid #ccc">
+            <thead>
+                <tr>
+
+                    <th width="50%" align="right" style="padding:10px 5px 0px">
+                        <div style="text-align:right">
+                            <p style="font-size: 13px; margin:0 0 5px">Quotation: <span style="text-transform:uppercase;color: #686868;">@ViewBag.Quotation.Id</span></p>
+                            <p style="font-size: 13px; margin: 0 0 5px">Date: <span style="text-transform:uppercase;color: #686868;">@DateTime.Now.ToString("dd/MM/yyyy")</span></p>
+                            <p style="font-size: 13px;">Currency: <span style="text-transform:uppercase;color: #686868;">@ViewBag.Currency</span></p>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2" style="padding:0 5px">
+                        @*<span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight:500; font-size: 13px; color:#000000; display: inline-block;">Quotation to: </span>*@
+                        <div style="text-align:left">
+                            <div id="Custname">
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.Quotation.ContactPersonName))
+                                {
+                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Business Name:- @ViewBag.Quotation.ContactPersonName </span>
+                                }
+                                else
+                                {
+                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Customer Name:- <span class="FirstName">@ViewBag.Quotation.FirstName</span> <span class="lastname">@ViewBag.Quotation.LastName</span></span>
+                                }
+                                @*<span class="firstname" style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Name :- @ViewBag.Quotation.FirstName </span> <span class="lastname" style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.Quotation.LastName</span>*@
+                                @*}*@
+                            </div>
+                            <div id="Custemail">
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.Quotation.Email))
+                                {
+                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Email :- @ViewBag.Quotation.Email</span>
+                                }
+                                else
+                                {
+                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Email :- @ViewBag.Quotation.EmailAddess</span>
+                                }
+                                @*}*@
+                            </div>
+                            <div id="Custaddress">
+
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.Quotation.PhysicalAddress))
+                                {
+                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Address :- @ViewBag.Quotation.PhysicalAddress</span>
+                                }
+                                else
+                                {
+                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">Address :- @ViewBag.Quotation.BusinessAddress</span>
+                                }
+                                @*}*@
+                            </div>
+                            <div id="Custnumber">
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.Quotation.ContactNumber))
+                                {
+
+                                    <Span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; "> ContactNumber :-@ViewBag.Quotation.ContactNumber </Span>
+                                }
+                                else
+                                {
+                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; "> ContactNumber :-@ViewBag.Quotation.BusinessPhoneNumber </span>
+
+                                }
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th colspan="2" align="right" style="padding:0 5px 10px; text-align:right; font-weight:normal;">
+                        <button class="details-edit btn btn-success">Edit</button>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+
+        <div class="modal" id="editCustdetail">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Customer Detail</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editDetailsForm">
+                            <label>First Name :</label>
+                            <input type="text" id="Firstname" class="form-control" placeholder="First Name">
+                            <label>Last Name :</label>
+                            <input type="text" id="Lastname" class="form-control" placeholder="Last Name">
+                            <label>Email Address :</label>
+                            <input type="text" id="email" class="form-control" placeholder="Email Address">
+                            <label>Address :</label>
+                            <input type="text" id="address" class="form-control" placeholder="Address">
+                            <label>Contact Number :</label>
+                            <input type="text" id="contact" class="form-control" placeholder="Contact number">
+                            <!-- Add more input fields as needed -->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="savedetails">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="" style="margin:15px 0 0px">
+        <table id="tableId" border="0" cellpadding="0" cellspacing="0" width="1200" style="border-collapse:collapse; margin:0 auto; border:1px solid #ccc">
+            <thead>
+                <tr>
+                    @*<th style="display:none" id="ProductId"></th>*@
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Policy Class</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Risk cover</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Risk item</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Currency</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Sum Insured</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Rate</th>                 
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px">Payment Term</th>
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px" id="thAnnualId">Total Premium</th>                
+                    <th style="font-weight:600; font-size:13px; padding:7px 6px 7px; text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.customerdetails)
+                {
+                    <tr>
+                        @*<td valign="top" style="display:none">@item.Id</td>*@
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;" id="policyId">@item.PolicyClassName</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.RiskCoverName</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">
+                            <p class="riskitemcls">@item.RiskItemName</p>
+                            <strong> Risk Address: </strong><p class="riskadd"> @item.RiskAddress</p>
+                        </td>
+
+                        @*<td>@item.RiskAddress</td>*@
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.Currency</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.SumInsured</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;" id="Riskrate">
+                            @*@item.RiskRate*@
+                            @{
+                                string riskRate = item.RiskRate; 
+                                if (!string.IsNullOrEmpty(riskRate))
+                                {
+                                    @riskRate<span>%</span>
+                                }
+                                else
+                                {
+                                    @:&nbsp; <!-- Use non-breaking space to maintain the layout -->
+                                }
+                            }
+                        </td>
+
+                        @*<td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;" class="stampDutyValue">@item.StampDuty</td>*@
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;" class="totalPremiumValue">@item.PaymentTerm</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.TotalPremiumPayable</td>
+                        <td valign="middle" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: #686868; text-align:right">
+                            <button class="edit-btn" data-item-id="@item.Id" style="color: blue;">
+                                <i style="font-size:24px" class="fa">&#xf044;</i>
+                            </button>
+
+                            <button class="delete-btn" data-item-id="@item.Id" onclick="ShowPopupp('@item.Id')" style="color: red;">
+                                <i style="font-size:24px" class="fa">&#xf1f8;</i>
+                            </button>
+
+
+                        </td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;display:none;">@item.PolicyClassId</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;display:none;">@item.RiskCoverId</td>
+                        <td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;display:none;">@item.RiskItemId</td>
+                    </tr>
+
+                }
+            </tbody>
+           
+
+
+            <tfoot style="background: #fff; border: 1px solid #ccc">
+                <tr>
+                    <td valign="top" colspan="7" style="font-weight:600;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;color: #424242;" id="totalPremiumField">Total Premium</td>
+                    <td id="annualTotalPremium" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Annualtotalpayble</td>
+                    <td id="quarterlyTotalPremium" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Quarterlytotalpayble</td>
+                    <td id="termlyTotalPremium" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Termlytotalpayble </td>
+                    <td id="monthlyTotalPremium" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Monthlytotalpayble </td>
+                    <td valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;"></td>
+                </tr>
+                <tr>
+                    <td valign="top" colspan="7" style="font-weight:600; font-size: 13px; line-height: 16px; padding: 10px 6px; border-bottom: 1px solid #ccc; color: #424242;" id="totalStampDutyField">Stamp Duty(5%)</td>
+                    <td id="annualStampDuty" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Annualstampvalue</td>
+                    <td id="quarterlyStampDuty" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Quarterlystampvalue</td>
+                    <td id="termlyStampDuty" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Termlystampvalue</td>
+                    <td id="monthlyStampDuty" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;">@Model.Monthlystampvalue</td>
+                    <td valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;"></td>
+                </tr>
+                <tr>
+                    <td valign="top" colspan="7" style="font-weight:600;font-size:13px;line-height:16px; padding:10px 6px; color: #424242;">Total Payable</td>
+                    <td id="annualTotalPayable" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@(Model.Annualtotalpayble + Model.Annualstampvalue)</td>
+                    <td id="quarterlyTotalPayable" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@(Model.Quarterlytotalpayble + Model.Quarterlystampvalue)</td>
+                    <td id="termlyTotalPayable" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@(Model.Termlytotalpayble+ Model.Termlystampvalue)</td>
+                    <td id="monthlyTotalPayable" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@(Model.Monthlytotalpayble+ Model.Monthlystampvalue)</td>
+                    <td valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                </tr>
+                <tr>
+                  
+                </tr>
+            </tfoot>
+
+
+
+
+
+        </table>
+        <div class="" style="margin:15px 0 0px">
+            <table id="tableId" border="0" cellpadding="0" cellspacing="0" width="1200" style="border-collapse:collapse; margin:0 auto; border:1px solid #ccc">
+                <tr>
+                    <td valign="top" colspan="14" style="font-weight:600; font-size: 13px; line-height: 16px; padding: 10px 6px; border-bottom: 1px solid #ccc; color: #424242;" id="totalStampDutyField">Policy Date</td>
+
+                    <td id="frmdate" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@Model.PolicyValidityPeriodFrom</td>
+                    <td id="Todte" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;">@Model.PolicyValidityPeriodTo</td>
+                    <td id="custoId" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px; visibility:hidden" >@Model.Id</td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td id="" valign="top" style="font-weight:400;font-size:13px;line-height:16px; padding:10px 6px;"></td>
+                    <td>
+                        <button class="date-btn" data-item-id="" style="color: blue;">
+                            <i style="font-size:24px" class="fa">&#xf044;</i>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="quotes-button-section">
+            <div class="container text-right">
+                <div class="quotes-button-list">
+                    <ul class="list-inline">
+                        <li>
+                            <a href="@Url.Action("ViewQuotations", "NonMotorCustomers", new { Id = 2026 }, protocol: Request.Url.Scheme)" style="font-size: 19px;" class="btn btn-danger">Back</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Edit Form (Modal) -->
+        <div class="modal" id="editModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Edit Product Detail</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm">
+                            <!-- Input fields for editing data -->
+
+                            <label>Policy Class :</label>
+                            <select class="form-control select-class" id="policyclass_ddl" data-name="editPolicyClass">
+                            </select>
+                            <label>Risk Cover :</label>
+                            <select class="form-control select-class" id="riskcover_ddl">
+                            </select>
+                            <label>Risk Item :</label>
+                            <select class="form-control select-class" id="riskitem_ddl">
+                            </select>
+                            <label>Risk Address :</label>
+                            <input type="text" id="editRiskaddress" class="form-control" placeholder="Risk Address">
+                            <label>Sum Insured :</label>
+                            <input type="text" id="SuminsuredId" class="form-control" placeholder="Sum Insured" onclick="checkInputs()">
+                            <label>Risk Rate :</label>
+                            <input type="text" id="RiskRateId" class="form-control" placeholder="Risk Rate" onclick="checkInputs()">
+                            <label>Payment Term :</label>
+                            @*<input type="text" id="paymenttermId" class="form-control" placeholder="Payment Term" readonly="readonly">*@
+                            <select class="form-control select-class" id="paymenttermId" onchange="termChange()" disabled>
+                                <option value="Annual">Annual</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Termly">Termly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
+                            @*<label>Stamp Duty :</label>
+                                <input type="text" id="StampDutyId" class="form-control" placeholder="Stamp Duty">*@
+                            <label>Total Payble :</label>
+                            <input type="text" id="TotalpayableId" class="form-control" placeholder="Total Payable">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="productsaveChanges">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Date modal*@
+        <div class="modal" id="datemodal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Edit Policy Date</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm">
+                            <!-- Input fields for editing data -->
+
+                            <label>From Date:</label>
+                            <div class='input-group' id='datetimepicker1'>
+
+                                <input type="text" id="PolicyValidityPeriodFrom" class="form-control" placeholder="From Date">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+
+                            <br>
+                            <label>To Date:</label>
+
+                            <div class='input-group' id='datetimepicker2'>
+                                <input type="text" id="PolicyValidityPeriodTo" class="form-control" placeholder="To Date">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar" id="dateid"></span>
+                                </span>
+                              
+                            </div>
+                            <div>
+                                <input type="text" id="CustomerId" class="form-control" placeholder="" style="visibility:hidden">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="datesaveChanges">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="MyModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; color: #00bcea; font-weight: bold;">Are you sure you want to delete this?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger float-right" onclick="ConfirmDelete();">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    var selectedItemID;
+
+    function checkInputs() {
+
+        var sumInsured = document.getElementById("SuminsuredId").value;
+        var riskRate = document.getElementById("RiskRateId").value;
+        var paymentTermDropdown = document.getElementById("paymenttermId");
+        var initialPaymentTermValue = paymentTermDropdown.value;
+
+        if (sumInsured && riskRate) {
+            paymentTermDropdown.value = '0';
+            // Both Sum Insured and Risk Rate have values, so enable the dropdown
+            paymentTermDropdown.disabled = false;
+        } else {
+            // Either Sum Insured or Risk Rate (or both) is empty, so disable the dropdown
+            paymentTermDropdown.disabled = true;
+        }
+
+        for (var i = 0; i < paymentTermDropdown.options.length; i++) {
+            paymentTermDropdown.options[i].disabled = true;
+        }
+
+        // Enable the option that matches the initial selected value
+        var selectedOption = paymentTermDropdown.querySelector('option[value="' + initialPaymentTermValue + '"]');
+        if (selectedOption) {
+            selectedOption.disabled = false;
+        }
+    }
+
+        $(document).ready(function () {
+
+            // Iterate through each column header (skip the first row)
+            $('#tableId thead tr th').each(function (index) {
+                // Check if all cells in this column have null values
+                var allCellsNull = true;
+                //This function using for hide null <td></td> and <th></th>
+                $('#tableId tbody tr').each(function () {
+
+                    var cellText = $(this).find('td:eq(' + index + ')').text().trim();
+                    if (cellText !== "") {
+                        allCellsNull = false;
+                        return false; // Exit the loop if a non-null cell is found
+                    }
+                });
+
+                // Hide the column header and all cells if all cells are null
+                if (allCellsNull) {
+
+                    $(this).hide();
+                    $('#tableId tbody tr').each(function () {
+                        $(this).find('td:eq(' + index + ')').hide();
+                    });
+                }
+            });
+
+            $('#tableId tfoot tr:nth-child(1) td').each(function (index) {
+
+                var columnIndex = index +  1; // Index is 0-based, but nth-child is 1-based
+
+                // Check if all cells in this column are empty
+                var allCellsNull = true;
+                $('#tableId tfoot tr:not(:first-child) td:nth-child(' + columnIndex + ')').each(function () {
+
+                    var cellText = $(this).text().trim();
+                    if (cellText !== "0") {
+                        allCellsNull = false;
+                        return false; // Exit the loop if a non-null cell is found
+                    }
+                });
+
+                // Hide the entire column in the <tfoot> if all cells are null
+                if (allCellsNull) {
+
+                    $('#tableId tfoot tr').each(function () {
+                        $(this).find('td:nth-child(' + columnIndex + ')').hide();
+                    });
+                }
+                rowToEdit = $(this).closest('tr');
+
+            });
+
+
+
+            $('#datetimepicker1 input').datepicker({
+
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date(),
+                onSelect: function (dateText, inst) {
+                    debugger
+                    var selectedDate = new Date(dateText);
+
+                    var toDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, selectedDate.getDate());
+
+                    $('#datetimepicker2 input').datepicker('option', 'minDate', toDate);
+
+                    $('#datetimepicker2 input').datepicker('setDate', toDate);
+                }
+            });
+
+
+            // Initialize the second datepicker
+            $('#datetimepicker2 input').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0
+            });
+
+            $('.edit-btn').click(function () {
+
+                selectedItemID = $(this).data('item-id');
+                var paymentTermDropdown = document.getElementById("paymenttermId");
+                paymentTermDropdown.disabled = true;
+                rowToEdit = $(this).closest('tr');
+                // Retrieve data from the selected row and populate the edit form
+                var policyClass = rowToEdit.find('td:eq(0)').text().trim();
+                /*const policyClass = $('#tableId tbody').children()[0].children[0].innerHTML;*/
+                var riskCover = rowToEdit.find('td:eq(1)').text().trim();
+                var riskitem = rowToEdit.find('td:eq(2)').children(".riskitemcls").text().trim();
+                var riskaddress = rowToEdit.find('td:eq(2)').children(".riskadd").text().trim()
+                //$('#RiskRateId').val().split('%')[0]
+                var sumInsured = rowToEdit.find('td:eq(4)').text().trim();
+                //var RiskRate = rowToEdit.find('td:eq(5)').text().trim();
+                var RiskRate = rowToEdit.find('td:eq(5)').text().split('%')[0].trim();
+                //var StampDuty = rowToEdit.find('td:eq(6)').text().trim();
+                var paymentTerm = rowToEdit.find('td:eq(6)').text().trim();
+                var TotalPremium = rowToEdit.find('td:eq(7)').text().trim();
+                var AnnualPayable = rowToEdit.find('td:eq(8)').text().trim();
+                var QuarterlyPayable = rowToEdit.find('td:eq(9)').text().trim();
+                var MonthlyPayable = rowToEdit.find('td:eq(10)').text().trim();
+                var TermlyPayable = rowToEdit.find('td:eq(11)').text().trim();
+                // Populate the edit form fields
+                $('#editPolicyClass').val(policyClass);
+                $('#editRiskCover').val(riskCover);
+                $('#riskitem_ddl').val(riskitem);
+                $('#editRiskaddress').val(riskaddress);
+                $('#SuminsuredId').val(sumInsured);
+                $('#paymenttermId').val(paymentTerm);
+                $('#RiskRateId').val(RiskRate);
+              /*  $('#StampDutyId').val(StampDuty);*/
+                $('#TotalpayableId').val(TotalPremium);
+                $('#Annual').val(AnnualPayable);
+                $('#Quartely').val(QuarterlyPayable);
+                $('#Monthly').val(MonthlyPayable);
+                $('#Termly').val(TermlyPayable);
+                GetPolicyClasses();
+                Riskcovers();
+                GetriskItm();
+                if (AnnualPayable == "" || AnnualPayable == null) {
+                    $('#Annual').hide();
+                }
+                if (QuarterlyPayable == "" || QuarterlyPayable == null) {
+                    $('#Quartely').hide();
+
+                }
+                if (MonthlyPayable == "" || MonthlyPayable == null) {
+
+                    $('#Monthly').hide();
+                }
+                if (TermlyPayable == "" || TermlyPayable == null) {
+                    $('#Termly').hide();
+                }
+                // Show the edit modal
+                $('#editModal').modal('show');
+            });
+
+            $('.date-btn').click(function () {
+                debugger
+                $('#datemodal').modal('show');
+                var custoId = $('#custoId').text();
+                var fromdate = $('#frmdate').text()
+                var Todate =  $('#Todte').text()
+                $('#CustomerId').val(custoId);
+                $('#PolicyValidityPeriodFrom').val(fromdate);
+                $('#PolicyValidityPeriodTo').val(Todate);
+            })
+
+
+
+
+            $('#datesaveChanges').on('click', function () {
+                debugger
+                var fromDate = $('#PolicyValidityPeriodFrom').val();
+                var toDate = $('#PolicyValidityPeriodTo').val();
+                var custoId = $('#CustomerId').val();
+
+                
+
+                $.ajax({
+                  
+                    url: '/NonMotorCustomers/UpdateDate',
+                    type: 'POST',
+                    data: {
+                        id: custoId,
+                        fromDate: fromDate,
+                        toDate: toDate
+                    },
+                    success: function (response) {
+                      
+                       
+                        $('#datemodal').modal('hide');
+                        location.reload();
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+            });
+
+            function formatDecimal(selector) {
+                $(selector).each(function () {
+                    var value = parseFloat($(this).text());
+
+                    if (!isNaN(value)) {
+                        // Format the value to always have two decimal places and trailing zeroes
+                        var formattedValue = value.toFixed(2);
+
+                        // Append ".00" if there is no decimal point
+                        if (formattedValue.indexOf('.') === -1) {
+                            formattedValue += '.00';
+                        }
+
+                        $(this).text(formattedValue);
+                    }
+                });
+            }
+
+            // Selectors for Total Payable elements
+            var selectors = ['#annualTotalPayable', '#quarterlyTotalPayable', '#termlyTotalPayable', '#monthlyTotalPayable'];
+            var totalPremiumSelectors = ['#annualTotalPremium', '#quarterlyTotalPremium', '#termlyTotalPremium', '#monthlyTotalPremium'];
+            var stampDutySelectors = ['#annualStampDuty', '#quarterlyStampDuty', '#termlyStampDuty', '#monthlyStampDuty'];
+
+            // Iterate through elements and format decimal if needed
+            selectors.forEach(function (selector) {
+                formatDecimal(selector);
+            });
+
+            // Format decimal for Total Premium
+            totalPremiumSelectors.forEach(function (selector) {
+                formatDecimal(selector);
+            });
+
+            // Format decimal for Stamp Duty
+            stampDutySelectors.forEach(function (selector) {
+                formatDecimal(selector);
+            });
+
+
+
+        });
+
+
+
+      function termChange() {
+
+         var Sumninsured = $('#SuminsuredId').val();
+         var risk = $('#RiskRateId').val().replace('%','');
+         var riskrate = risk / 100;
+          var selectElement = event.target;
+          var selectedValue = selectElement.value;
+         if (selectedValue == "Annual") {
+             var Basicpremium = Sumninsured * riskrate;
+         }
+         else if (selectedValue == "Termly") {
+             var Basicpremium = (parseFloat(Sumninsured * riskrate) / 3);
+         }
+         else if (selectedValue == "Quarterly") {
+             var Basicpremium = (parseFloat(Sumninsured * riskrate) / 4);
+         }
+         else if (selectedValue == "Monthly") {
+             var Basicpremium = (parseFloat(Sumninsured * riskrate) / 12);
+         }
+         var stmpduty = 0.05 * Basicpremium;
+         var totalpayable = Basicpremium + stmpduty;
+          $('#StampDutyId').val(stmpduty.toFixed(2));
+          $('#TotalpayableId').val(Basicpremium.toFixed(0));
+          $('#Annual').val(totalpayable.toFixed(2));
+          $('#Quartely').val(totalpayable.toFixed(2));
+          $('#Monthly').val(totalpayable.toFixed(2));
+          $('#Termly').val(totalpayable.toFixed(2));
+     };
+
+      function printPdf() {
+
+            var FileName = $('#name').text().trim();
+
+            var HTML_Width = $("#content").width();
+            var HTML_Height = $("#content").height();
+            var top_left_margin = 15;
+            var PDF_Width = HTML_Width + (top_left_margin * 2);
+            var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+            var canvas_image_width = HTML_Width;
+            var canvas_image_height = HTML_Height;
+
+            var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+            html2canvas($("#content")[0]).then(function (canvas) {
+                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+                for (var i = 1; i <= totalPDFPages; i++) {
+                    pdf.addPage(PDF_Width, PDF_Height);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 3), canvas_image_width, canvas_image_height);
+                }
+                FileName = FileName + ".pdf";
+                pdf.save(FileName);
+            });
+     }
+
+     function GetPolicyClasses() {
+
+                var Pclass = new Object();
+              Pclass.Name = $('#policyclass_ddl').attr("data-name");//$('#editPolicyClass').val();
+                $.ajax({
+                    url: '/NonMotorCustomers/AddPolicyClass',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(Pclass),
+
+                    dataType: 'json',
+                    success: function (response) {
+
+
+                   Riskcover(response);
+
+                          },
+                          error: function (error) {
+                              console.error('Error:', error);
+                          }
+                      });
+    };
+
+    function Riskcovers() {
+
+        var policyClassval = rowToEdit.find('td:eq(10)').text().trim();
+
+        var policyClass = rowToEdit.find('td:eq(1)').text().trim();
+        var thirdDropdown = $('#policyclass_ddl');
+        thirdDropdown.empty();
+
+
+        thirdDropdown.append($('<option></option>').val(policyClassval).text(policyClass));
+
+        populateSecondDropdown(policyClassval)
+    }
+
+    function Riskcover(options) {
+
+        var policyClassval = rowToEdit.find('td:eq(12)').text().trim();
+
+        var policyClass = rowToEdit.find('td:eq(0)').text().trim();
+        var thirdDropdown = $('#policyclass_ddl');
+        thirdDropdown.empty();
+
+
+        thirdDropdown.append($('<option></option>').val(policyClassval).text(policyClass));
+        $.each(options, function (index, Getoption) {
+
+            var optionhtml = '<option value="' + Getoption.Id + '">' + Getoption.PolicyClassName + '</option>';
+            thirdDropdown.append(optionhtml);
+        });
+        populateSecondDropdown(policyClassval)
+    }
+
+
+    function populateSecondDropdown(selectedValue) {
+
+        $.ajax({
+            url: '@Url.Action("GetRiskCoversItems", "NonMotorCustomers")',
+            type: 'GET',
+            data: { selectedValue: selectedValue },
+            dataType: 'json',
+            success: function (data) {
+
+                RiskCoverItemsDropdown(data);
+            },
+            error: function (xhr, status, error) {
+
+                console.error(xhr.statusText);
+            }
+        });
+    }
+
+     function RiskCoverItemsDropdown(options) {
+         var riskcoverval = rowToEdit.find('td:eq(14)').text().trim();
+            var RiskcoverNameItems = rowToEdit.find('td:eq(1)').text().trim();
+            /* var RiskcoverId = rowToEdit.find('td:eq(0)').text().trim();*/
+            var secondDropdown = $('#riskcover_ddl');
+            secondDropdown.empty();
+         secondDropdown.append($('<option></option>').val(riskcoverval).text(RiskcoverNameItems));
+            $.each(options, function (index, getoption) {
+
+                var optionhtml = '<option value="' + getoption.Id + '">' + getoption.RiskCoverName + '</option>';
+                secondDropdown.append(optionhtml);
+            });
+     }
+
+     $('#policyclass_ddl').change(function () {
+
+         $('#riskcover_ddl').empty();  // Empty the riskcover_ddl dropdown
+         $('#riskitem_ddl').empty();
+         var paymentTermDropdown = document.getElementById("paymenttermId");
+         var policyClassDropdown = document.getElementById("policyclass_ddl");
+         var initialPaymentTermValue = paymentTermDropdown.value;
+
+         var selectedValue = $(this).val();
+
+         // Disable all options in the payment term dropdown
+         for (var i = 0; i < paymentTermDropdown.options.length; i++) {
+             paymentTermDropdown.options[i].disabled = true;
+         }
+
+         // Enable the option that matches the initial selected value
+         var selectedOption = paymentTermDropdown.querySelector('option[value="' + initialPaymentTermValue + '"]');
+         if (selectedOption) {
+             selectedOption.disabled = false;
+         }
+
+         if (selectedValue) {
+             populateSecondDropdownrsk(selectedValue);
+         } else {
+             $('#riskcover_ddl').empty();
+         }
+     });
+
+     function populateSecondDropdownrsk(selectedValue) {
+
+        $.ajax({
+           url: '@Url.Action("GetRiskCoversItems", "NonMotorCustomers")',
+            type: 'GET',
+            data: { selectedValue: selectedValue },
+            dataType: 'json',
+            success: function (data) {
+
+                RiskCoverDropdown(data);
+            },
+            error: function (xhr, status, error) {
+
+                console.error(xhr.statusText);
+            }
+        });
+    }
+
+    function RiskCoverDropdown(options) {
+
+        var secondDropdown = $('#riskcover_ddl');
+        var RiskcoversName = rowToEdit.find('td:eq(1)').text().trim();
+        var riskcoverval = 1; // Set the default value to 1
+
+        secondDropdown.empty();
+
+        // Create an option with the default value and select it
+        var defaultOption = $('<option></option>').val(riskcoverval).text(' ');
+        defaultOption.prop('selected', true);
+
+        secondDropdown.append(defaultOption);
+
+        $.each(options, function (index, getoption) {
+
+            var optionhtml = '<option value="' + getoption.Id + '">' + getoption.RiskCoverName + '</option>';
+            secondDropdown.append(optionhtml);
+        });
+    }
+
+
+
+     function GetriskItm() {
+
+         var Items = new Object();
+         Items.Name = $('#riskitem_ddl').attr("data-name");//$('#editPolicyClass').val();
+         $.ajax({
+             url: '/NonMotorCustomers/GetRiskItemswithoutpara',
+             type: 'GET',
+
+             contentType: 'application/json',
+             data: JSON.stringify(Items),
+
+             dataType: 'json',
+             success: function (data) {
+
+                 RiskItemsDropdown(data);
+             },
+             error: function (xhr, status, error) {
+
+                 console.error(xhr.statusText);
+             }
+         });
+         }
+
+     function RiskItemsDropdown(options) {
+
+
+         var riskItemval = rowToEdit.find('td:eq(15)').text().trim();
+                 var RiskItemsName = rowToEdit.find('td:eq(2)').children(".riskitemcls").text().trim();
+                 /* var RiskcoverId = rowToEdit.find('td:eq(0)').text().trim();*/
+                 var secondDropdown = $('#riskitem_ddl');
+                 secondDropdown.empty();
+         secondDropdown.append($('<option></option>').val(riskItemval).text(RiskItemsName));
+
+     }
+
+
+     $('#riskcover_ddl').change(function () {
+
+         var selectedValue = $(this).val();
+         if (selectedValue) {
+             RiskItemdata(selectedValue);
+         } else {
+             $('#riskitem_ddl').empty();
+         }
+     });
+
+
+     function RiskItemdata(selectedValue) {
+
+        $.ajax({
+           url: '@Url.Action("GetRiskItems", "NonMotorCustomers")',
+            type: 'GET',
+            data: { selectedValue: selectedValue },
+            dataType: 'json',
+            success: function (data) {
+
+                RiskItemDropdown(data);
+            },
+            error: function (xhr, status, error) {
+
+                console.error(xhr.statusText);
+            }
+        });
+    }
+
+    function RiskItemDropdown(options) {
+
+        var secondDropdown = $('#riskitem_ddl');
+        var RiskItemsName = rowToEdit.find('td:eq(2)').children(".riskitemcls").text().trim();
+        secondDropdown.empty();
+
+        // Create an option with the default value and select it
+        var defaultOption = $('<option></option>').val(1).text(' ');
+        defaultOption.prop('selected', true);
+
+        secondDropdown.append(defaultOption);
+
+        $.each(options, function (index, getoption) {
+
+            var optionhtml = '<option value="' + getoption.Id + '">' + getoption.RiskItemName + '</option>';
+            secondDropdown.append(optionhtml);
+        });
+    }
+
+
+
+    $('.details-edit').click(function () {
+
+        var FirstName = "";
+        var LastName = "";
+        rowToEdit = $(this).closest('tr');
+        // Retrieve data from the selected row and populate the edit form
+        FirstName = $('.FirstName').text();
+
+        LastName = $('.lastname').text();
+        if (FirstName == '') {
+            FirstName =  $('.pdftype').text();
+        }
+        var Email = $('#Custemail').text().trim().split('-')[1];
+        var Address = $('#Custaddress').text().trim().split('-')[1];
+        var Contact = $('#Custnumber').text().trim().split('-')[1];
+
+
+        // Populate the edit form fields
+        $('#Firstname').val(FirstName);
+        $('#Lastname').val(LastName);
+        $('#email').val(Email);
+        $('#address').val(Address);
+        $('#contact').val(Contact);
+
+        // Show the edit modal
+        $('#editCustdetail').modal('show');
+    });
+
+
+
+     $('#savedetails').click(function () {
+
+
+         // Retrieve edited data from the form
+         const CustFirstName = $('#Firstname').val().trim();
+         const CustLastName = $('#Lastname').val().trim();
+         const CustEmail = $('#email').val().trim();
+         const CustAddress = $('#address').val().trim();
+         const CustContact = $('#contact').val().trim();
+          var Id = @ViewBag.Quotation.Id;
+
+
+
+                const Model = {
+                    FirstName: CustFirstName,
+                    LastName: CustLastName,
+                    Email: CustEmail,
+                    Address: CustAddress,
+                    ContactNumber: CustContact,
+                    Id: Id
+                };
+
+                  $.ajax({
+                      url: '/NonMotorCustomers/Customerquotationdetails/',
+                      type: 'POST',
+                contentType: 'application/json',
+                      data: JSON.stringify(Model),
+                success: function (data) {
+
+                    // Close the edit modal
+                    $('#editCustdetail').modal('hide');
+
+                    // Reload the page
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+                });
+            });
+
+    // Handle the "Save Changes" button click event
+            $('#productsaveChanges').click(function () {
+
+                //Retrieve edited data from the form
+                //var editedPolicyClass = $('#policyclass_ddl').val();
+                //var editedRiskCover = $('#riskcover_ddl').val();
+                //var editedRiskItem = $('#riskitem_ddl').val();
+
+                // Get the dropdown element by its id
+                var dropdown = document.getElementById("policyclass_ddl");
+                // Get the selected option
+                var selectedOption = dropdown.options[dropdown.selectedIndex];
+                // Get the value of the selected option
+                var editedPolicyClass = selectedOption.label;
+
+                var dropdown = document.getElementById("riskcover_ddl");
+                var selectedOption = dropdown.options[dropdown.selectedIndex];
+                var editedRiskCover = selectedOption.label;
+
+                var dropdown = document.getElementById("riskitem_ddl");
+                var selectedOption = dropdown.options[dropdown.selectedIndex];
+                var editedRiskItem = selectedOption.label;
+
+                var editedRiskAddress = $('#editRiskaddress').val();
+                var editedSumInsured = $('#SuminsuredId').val();
+                var editedRiskRate = $('#RiskRateId').val();
+                var editedPaymentTerm = $('#paymenttermId').val();
+                //var editedStampDuty = $('#StampDutyId').val();
+                var editedTotalPayable = $('#TotalpayableId').val();
+                var CustomerId = @ViewBag.Quotation.Id;
+               var productid = selectedItemID;
+                var ProductId = productid;
+
+                const model = {
+                    //id = ProductId,
+                    id: productid,
+                    PolicyClass: editedPolicyClass,
+                    RiskCoverClass: editedRiskCover,
+                    RiskItemClass: editedRiskItem,
+                    RiskAddress: editedRiskAddress ,
+                    SumInsured: editedSumInsured,
+                    RiskRate: editedRiskRate,
+                    PaymentTerm: editedPaymentTerm ,
+                    //StampDuty: editedStampDuty,
+                    TotalPayable: editedTotalPayable,
+                    customerId: CustomerId,
+
+                };
+
+            $.ajax({
+            url: '/NonMotorCustomers/EditGeneratQuotaion/',
+            type: 'POST',
+                contentType: 'application/json',
+             data: JSON.stringify(model),
+                success: function (data) {
+
+                    window.location.reload();
+                   //window.location.href = '@Url.Action("PolicySchedule" , "NonMotorCustomers")/';
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+                });
+                // Close the edit modal
+                $('#editModal').modal('hide');
+            });
+
+
+
+    function ShowPopupp(Id) {
+
+
+        $("#MyModal").modal("show");
+        ProductId = Id;
+    }
+
+    function ConfirmDelete() {
+
+        @*var url = "@Url.Action("DeletePolicyClass", "BrokerNonmoter", new { Id=123 })";
+        var newurl = url.replace("123", ProductId);*@
+        deleteRecord(ProductId);
+    }
+
+    function deleteRecord(invoiceNumber) {
+
+        $.ajax({
+            url: '/NonMotorCustomers/DeleteProduct',
+            type: 'POST',
+            data: JSON.stringify({ invoiceNumber: invoiceNumber }),
+            contentType: 'application/json',
+            success: function (result) {
+                // Handle success, e.g., refresh the invoice list
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                // Log the error details to the console
+                console.error(xhr.responseText);
+                alert('An error occurred while deleting the record.');
+            }
+        });
+
+    }
+
+</script>

@@ -1,0 +1,616 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "GenerateInvoice";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<style>
+    .top-header-section, .footer-section {
+        display: none;
+    }
+
+    table {
+        empty-cells: show;
+     
+    }
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        
+    }
+
+    
+
+    th, td {
+        border: 1px solid #333;
+        padding: 8px 10px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    td {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+   
+
+    .quotes-button-section {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .quotes-button-list ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .quotes-button-list li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btnred {
+        background-color: #dc3545;
+    }
+
+    table td {
+        margin: 0;
+    }
+    .customer-details {
+        padding: 10px;
+        margin: 10px;
+    }
+</style>
+
+
+    <div id="contentdivInvoice" class="overflow-control">
+       <table border="0" id="content" cellpadding="0" cellspacing="0" width="800" style="width: 100%; border-collapse: collapse; background-color: white; margin: 0 auto; color: #000";>
+            <tbody>
+                <tr style="display: flex; align-items: stretch;">
+
+                    <td colspan="1" style="width:50%;padding:0 8px 0 0" valign="top">
+                        <table cellpadding="0" cellspacing="0" style="border:1px solid #333;width:100%;margin-bottom: 0px;">
+                            <thead>
+                            <th colspan="2" style="text-align:left;padding: 8px 10px;">
+                                <img width="250" src="/Images/geneinsure-logo5.png" />
+                            </th>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                        <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">
+                                            Genetic Financial Services</br>
+                                            5 Buckingham Gate</br>
+                                            Cnr 6th St & J. Chinamano Ave</br>
+                                            Harare</br>
+                                        </p>
+                                    </td>
+                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                        <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">
+                                            Tel: 08677007491</br >
+                                            Email: <a href="mailto:finance@gene.co.zw" style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;text-decoration:none"> finance@gene.co.zw</a> </br >
+                                            BP Number: 0200221796
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </td>
+                    <td colspan="1" cellpadding="0" cellspacing="0" style="width: 50%; padding: 0 0 0 8px;; vertical-align: top;">
+                        <table style="border: 1px solid #333; width: 100%; border-collapse: collapse; margin-bottom: 0px;">
+                            <thead>
+                            <th colspan="2" style="border: 1px solid #333; padding: 8px 10px; text-align: center; height: 54px; ">
+                                <p style="font-size: 17px; font-weight: 600; color: #040404; margin: 0; line-height: 18px; text-transform: uppercase;"> Proforma Invoice</p>
+                            </th>
+                            </thead>
+                            <tbody>
+                                @if (DateTime.Now != null && !string.IsNullOrWhiteSpace(@DateTime.Now.ToString("dd/MM/yyyy")))
+                                 {
+                                    <tr>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: start;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> Date</p>
+                                        </td>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: center;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">@DateTime.Now.ToString("dd/MM/yyyy")</p>
+                                        </td>
+                                    </tr>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.data.InvoiceNumber))
+                                {
+                                    <tr>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: start;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> Invoice No</p>
+                                        </td>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: center;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> @ViewBag.data.InvoiceNumber</p>
+                                        </td>
+                                    </tr>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(@ViewBag.Currency))
+                                {
+                                    <tr>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: start;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> Currency</p>
+                                        </td>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: center;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">@ViewBag.Currency</p>
+                                        </td>
+                                    </tr>
+                                }
+
+                                @if (!String.IsNullOrWhiteSpace(@ViewBag.Policygeneratenumber))
+                                {
+                                    <tr>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: start;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> Policy Number</p>
+                                        </td>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: center;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;" class="policycls">@ViewBag.data.PolicyNumber</p>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: start;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;"> Policy Number</p>
+                                        </td>
+                                        <td colspan="1" style="border-bottom: 1px solid #333; padding: 8px 10px; text-align: center;">
+                                            <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">......</p>
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="customer-details" colspan="2" style="padding: 10px; margin: 10px;">
+                        <div style="font-size: 18px; background-color: #f4f4f4; color: #333; font-weight: bold; margin-bottom: 10px;">Customer Details</div>
+
+                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessName))
+                        {
+                            <div style="font-size: 14px; color: #333; margin-bottom: 2px;">
+                                <strong style="display: inline-block;">Customer Name:</strong>
+                                <p class="pdftype" style="display: inline-block; margin-left: 2px;">@ViewBag.data.BusinessName</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="font-size: 14px; color: #333; margin-bottom: 2px;">
+                                <strong style="display: inline-block;">Customer Name:</strong>
+                                <p class="pdftype" style="display: inline-block; margin-left: 2px;">@ViewBag.data.FirstName @ViewBag.data.LastName</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessAddress))
+                        {
+                            <div style="font-size: 14px; color: #555; margin-bottom: 2px;"><strong>Address:</strong> @ViewBag.data.BusinessAddress</div>
+                        }
+                        else
+                        {
+                            <div style="font-size: 14px; color: #555; margin-bottom: 2px;"><strong>Address:</strong> @ViewBag.data.PhysicalAddress</div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.ContactNumber))
+                        {
+                            <div style="font-size: 14px; color: #555; margin-bottom: 2px;"><strong>Contact Number:</strong> @ViewBag.data.ContactNumber</div>
+                        }
+                        else
+                        {
+                            <div style="font-size: 14px; color: #555; margin-bottom: 2px;"><strong>Contact Number:</strong> @ViewBag.data.BusinessPhoneNumber</div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.Email))
+                        {
+                            <div style="font-size: 14px; color: #555;"><strong>Email:</strong> @ViewBag.data.Email</div>
+                        }
+                        else
+                        {
+                            <div style="font-size: 14px; color: #555;"><strong>Email:</strong> @ViewBag.data.ContactPersonEmail</div>
+                        }
+
+                    </td>
+                </tr>
+
+
+
+
+
+                <tr>
+                    <td colspan="5" style="padding: 10px 0 0 0px" valign="top">
+                        <table style="border: 1px solid #333; width: 100%; border-collapse: collapse; margin-bottom: 15px; background-color: #f9f9f9;">
+                            <tbody>
+                                <tr style="background-color: #f2f2f2; color: black;">
+                                    <td style="border-bottom: 2px solid #1b1919; width: 16.67%; text-align: center;  font-size: 16px; font-weight: bold; padding: 14px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Policy Class</td>
+                                    <td style="border-bottom: 2px solid #1b1919; width: 16.67%; text-align: center; font-size: 16px; font-weight: bold; padding: 14px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Risk Cover</td>
+                                    <td style="border-bottom: 2px solid #1b1919; width: 16.67%; text-align: center; font-size: 16px; font-weight: bold; padding: 14px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Risk Item</td>
+                                    <td style="border-bottom: 2px solid #1b1919; width: 16.67%; text-align: center; font-size: 16px; font-weight: bold; padding: 14px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Payment Term</td>
+                                    <td style="border-bottom: 1px solid #1b1919; width: 16.67%; text-align: center; font-size: 16px; font-weight: bold; padding: 14px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Premium</td>
+                                </tr>
+
+                                @foreach (var item in Model.customerdetails)
+                                {
+                                    <tr style="border-bottom: 1px solid #333; text-align: center;">
+                                        <td style="width: 16.67%; padding: 8px 14px; font-weight: bold;">@item.PolicyClassName</td>
+                                        <td style="width: 16.67%; padding: 8px 14px; font-weight: bold;">@item.RiskCoverName</td>
+                                        <td style="width: 16.67%; padding: 8px 14px; font-weight: bold;">@item.RiskItemName</td>
+                                        <td style="width: 16.67%; padding: 8px 14px; font-weight: bold;">@item.PaymentTerm</td>
+                                        <td style="width: 16.67%; padding: 8px 14px; font-weight: bold;">@item.TotalPremiumPayable</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="padding:0px 0 0 0px">
+                        <table style="width: 100%; margin: 0PX; border-spacing: 0; border-collapse: collapse; height:100%">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" style="width: 60%; padding: 0;">
+                                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #333; height: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <p style="text-align: center; font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px; padding: 8px 10px;">GENETIC FINANCIAL SERVICES (PVT) LTD</p>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                                        <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">
+                                                            BancABC ZWL<br>
+                                                            Branch: Mt Pleasant<br>
+                                                            Account Number: 37195045502019
+                                                        </p>
+                                                    </td>
+                                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                                        <p style="font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;">
+                                                            BancABC Nostro<br>
+                                                            Branch: Mt Pleasant<br>
+                                                            Account Number: 37195046633012
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" valign="top" style="padding: 8px 10px;">
+                                                        <p style="font-size: 12px; font-weight: 500; color: #272727; margin: 0; line-height: 18px;">Received in good order</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                                        <p style="font-size: 12px; font-weight: 500; color: #272727; margin: 0; line-height: 18px;">Signed <input style="border: none; border-bottom: 1px solid #333; width: 130px; height: 1px; vertical-align: sub;"> </input> </p>
+                                                    </td>
+                                                    <td colspan="1" valign="top" style="padding: 8px 10px;">
+                                                        <p style="font-size: 12px; font-weight: 500; color: #272727; margin: 0; line-height: 18px;">Date<input style="border: none; border-bottom: 1px solid #333; width: 130px; height: 1px; vertical-align: sub;"> </input> </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                   
+                                    <td colspan="3" id="tableId" style="width:40%;padding:0px;" valign="top">
+                                        <table id="tableId" style="border:1px solid #333;width:100%;border: 1px solid #333; width: 100%; border-spacing: 0; border-collapse: collapse;margin-bottom:15px">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #333;border-right:1px solid #333"> <p style="text-align:left;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;">Total Premium</p> </td>
+                                                    @if (@Model.Annualtotalpayble != 0)
+                                                    {
+                                                        <td id="annualTotalPremium" valign="top" style="border-bottom:1px solid #333;border-right:1px solid #333"> <p style="text-align:left;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;">@Model.Annualtotalpayble</td>
+                                                    }
+                                                    else if (@Model.Quarterlytotalpayble != 0)
+                                                    {
+                                                        <td id="quarterlyTotalPremium" valign="top" style="border-bottom:1px solid #333;border-right:1px solid #333"> <p style="text-align:left;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;">@Model.Quarterlytotalpayble</td>
+                                                    }
+                                                    else if (@Model.Termlytotalpayble != 0)
+                                                    {
+                                                        <td id="termlyTotalPremium" valign="top" style="border: 1px solid #333; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #333; border-bottom: 1px solid #333; color: black; ">@Model.Termlytotalpayble </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td id="monthlyTotalPremium" valign="top" style="border: 1px solid #333; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #333; border-bottom: 1px solid #333; color: black; ">@Model.Monthlytotalpayble </td>
+                                                    }
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="border:1px solid #333;width:100%;border: 1px solid #333; width: 100%; border-spacing: 0; border-collapse: collapse;margin-bottom:15px">
+                                                        <p style="text-align:left; font-size:12px; font-weight:600; color:#272727; margin:0; line-height:18px; padding:8px 10px;"> Discount &commat; 0.00%</p>
+                                                    </td>
+                                                    <td style="border:1px solid #333;width:100%;border: 1px solid #333; width: 100%; border-spacing: 0; border-collapse: collapse;margin-bottom:15px"> <p style="text-align:right;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;"> </p> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border:1px solid #333;width:100%;border: 1px solid #333; width: 100%; border-spacing: 0; border-collapse: collapse;margin-bottom:15px">
+                                                        <p style="text-align:left;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;">
+                                                            Stamp Duty (5%)
+                                                        </p>
+                                                    </td>
+                                                    @if (@Model.Annualstampvalue != 0)
+                                                    {
+                                                        <td id="annualStampDuty" valign="top" style="border:1px solid #333;text-align:center; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Annualstampvalue</td>
+                                                    }
+                                                    else if (@Model.Quarterlystampvalue != 0)
+                                                    {
+                                                        <td id="quarterlyStampDuty" valign="top" style="border: 1px solid #333; text-align: center; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Quarterlystampvalue</td>
+                                                    }
+                                                    else if (@Model.Termlystampvalue != 0)
+                                                    {
+                                                        <td id="termlyStampDuty" valign="top" style="border: 1px solid #333; text-align: center; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Termlystampvalue</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td id="monthlyStampDuty" valign="top" style="border: 1px solid #333; text-align: center; text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@Model.Monthlystampvalue</td>
+                                                    }
+                                                </tr>
+
+
+                                                <!--<tr>-->
+                                                    @*<td style="border-bottom:1px solid #333;border-right:1px solid #333"> <p style="text-align:left;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;"> </p> </td>
+                        <td style="border-bottom:1px solid #333;"> <p style="text-align:right;font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px;padding: 8px 10px;"> </p> </td>*@
+                                                <!--</tr>-->
+                                            </tbody>
+                                        </table>
+                                        <table style="border: 1px solid #333; width: 100%; border: 1px solid #333; font-weight: bold; border-spacing: 0; border-collapse: collapse;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border: 1px solid #333;">
+                                                        <p style="text-align:left; font-size: 12px; font-weight: 600; color: #272727; margin: 0; line-height: 18px; padding: 8px 10px;">Total Payable</p>
+                                                    </td>
+                                                    @if (@Model.Annualtotalpayble != 0)
+                                                    {
+                                                        <td id="annualTotalPayable" valign="top" style="text-transform: capitalize; text-align: center; font-size: 13px; width: 8%; font-weight: bold; line-height: 16px; padding: 10px 6px; border: 1px solid #333; color: black; text-align: right; ">@(Model.Annualtotalpayble + Model.Annualstampvalue)</td>
+                                                    }
+                                                    else if (@Model.Quarterlytotalpayble != 0)
+                                                    {
+                                                        <td id="quarterlyTotalPayable" valign="top" style="text-transform: capitalize; text-align: center; font-size: 13px; width: 8%; font-weight: bold; line-height: 16px; padding: 10px 6px; border: 1px solid #333; color: black; text-align: right; ">@(Model.Quarterlytotalpayble + Model.Quarterlystampvalue)</td>
+                                                    }
+                                                    else if (@Model.Termlytotalpayble != 0)
+                                                    {
+                                                        <td id="termlyTotalPayable" valign="top" style="text-transform: capitalize; text-align: center; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border: 1px solid #333; width: 8%; color: black; text-align: right; ">@(Model.Termlytotalpayble + Model.Termlystampvalue)</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td id="monthlyTotalPayable" valign="top" style="text-transform: capitalize; text-align: center; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border: 1px solid #333; width: 8%; color: black; text-align: right; ">@(Model.Monthlytotalpayble + Model.Monthlystampvalue)</td>
+                                                    }
+                                                </tr>
+
+
+                                            </tbody>
+
+
+
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="quotes-button-section">
+        <div class="container">
+            <div class="quotes-button-list text-center">
+                <ul class="list-inline">
+                    <li><button class="btn" onclick="SaveAsPdf()" type="button">Save As PDF</button></li>
+                    <li><button class="btn" onclick="Pdfdetails()" id="btnSendemail" type="button">Send Email</button></li>
+                    <li><button class="btn btnGenerate" type="button" onclick="window.location.href='@Url.Action("GenerateInvoiceNumber", "NonMotorCustomers", new { Id=ViewBag.CustomerId }, protocol: Request.Url.Scheme)'">Generate Policy</button></li>
+                    <li><button class="btn btnred" type="button" onclick="window.location.href='@Url.Action("ViewInvoices", "BrokerNonmoter", new { Id= ViewBag.CustomerId  }, protocol: Request.Url.Scheme)'">Back</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+<script src="~/Scripts/html2pdf.bundle.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+   
+        //// Function to format decimal values to always have two digits after the decimal point
+        function formatDecimal(selector) {
+            $(selector).each(function () {
+                var value = parseFloat($(this).text());
+
+                if (!isNaN(value)) {
+                    // Format the value to always have two decimal places and trailing zeroes
+                    var formattedValue = value.toFixed(2);
+
+                    // Append ".00" if there is no decimal point
+                    if (formattedValue.indexOf('.') === -1) {
+                        formattedValue += '.00';
+                    }
+
+                    $(this).text(formattedValue);
+                }
+            });
+        }
+
+
+
+      var policyNumber = '@ViewBag.Policygeneratenumber';
+
+        // Assuming that if the policyNumber is not empty, the button should be disabled
+        if (policyNumber.trim() !== '') {
+            // Disable the button and change its color
+            $('.btnGenerate').prop('disabled', true).css('background-color', 'grey'); // Change 'grey' to your desired color
+        }
+        // Selectors for Total Premium and Stamp Duty elements
+        var selectors = ['#annualTotalPayable', '#quarterlyTotalPayable', '#termlyTotalPayable', '#monthlyTotalPayable'];
+        var totalPremiumSelectors = ['#annualTotalPremium', '#quarterlyTotalPremium', '#termlyTotalPremium', '#monthlyTotalPremium'];
+        var stampDutySelectors = ['#annualStampDuty', '#quarterlyStampDuty', '#termlyStampDuty', '#monthlyStampDuty'];
+
+
+        // Iterate through elements and format decimal if needed
+        selectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+        // Format decimal for Total Premium
+        totalPremiumSelectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+        // Format decimal for Stamp Duty
+        stampDutySelectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+    });
+
+   
+   
+
+    function SaveAsPdf() {
+        var pdfname = $(".pdftype").text();
+        const contentElement = document.getElementById('contentdivInvoice');
+        const fontSize = calculateFontSizeToFit(contentElement);
+        contentElement.style.fontSize = fontSize + 'px';
+        html2pdf(contentElement, {
+            margin: [10, 10, 10, 10],
+            filename: "INVOICE_" + pdfname + ".pdf",
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [400, 360], orientation: 'portrait' },
+            onePage: false,
+            output: 'save',
+            onPageCreated: function (page, options) {
+                if (page === 1) {
+                    const header = document.createElement('div');
+                    header.textContent = 'Polycyschedule Header';
+                    header.style.textAlign = 'center';
+                    header.style.fontSize = '17px';
+                    contentElement.insertBefore(header, contentElement.firstChild);
+                } else {
+                    options.margin = [20, 20, 20, 20]; // Increase margins
+                    const newFontSize = calculateFontSizeToFit(contentElement);
+                    contentElement.style.fontSize = newFontSize + 'px';
+                }
+            }
+        });
+        window.scrollTo(0, 0);
+    }
+
+
+
+    function calculateFontSizeToFit(element) {
+        const maxHeight = 1041;
+        const originalFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+        let currentHeight = element.offsetHeight;
+        let fontSize = originalFontSize;
+        while (currentHeight > maxHeight && fontSize > 1) {
+            fontSize -= 3;
+            element.style.fontSize = fontSize + 'px';
+            currentHeight = element.offsetHeight;
+        }
+       return fontSize;
+    }
+
+
+
+
+    function printPdf(callback) {
+
+        var currentTimestamp = new Date().getTime();
+        var randomSuffix = Math.floor(Math.random() * 10000);
+        var FileName = "PDF_" + currentTimestamp + "_" + randomSuffix + ".pdf";
+        var HTML_Width = $("#content").width();
+        var HTML_Height = $("#content").height();
+        var top_left_margin = 15;
+        var PDF_Width = HTML_Width + (top_left_margin * 2);
+        var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+        var canvas_image_width = HTML_Width;
+        var canvas_image_height = HTML_Height;
+        var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+        html2canvas($("#content")[0]).then(function (canvas) {
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+
+            for (var i = 1; i <= totalPDFPages; i++) {
+                pdf.addPage(PDF_Width, PDF_Height);
+                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 3), canvas_image_width, canvas_image_height);
+            }
+
+
+            var pdfDataUri = pdf.output('dataurlstring');
+
+            // Remove metadata and get only the base64 data part
+            var base64Data = pdfDataUri.split(',')[1];
+
+            // Send the base64 data to the server using AJAX
+            $.ajax({
+                type: "POST",
+                url: "/BrokerNonmoter/SavePdf",
+                data: { pdfDataUri: base64Data, fileName: FileName },
+                success: function (response) {
+                  
+                    if (response.success) {
+                        //alert("PDF saved successfully.");
+                    } else {
+                        toastr.error("An error occurred while saving the PDF.");
+                    }
+                    callback(pdfDataUri, FileName);
+                },
+                error: function () {
+                    toastr.error("An error occurred while saving the PDF.");
+
+                }
+            });
+        });
+    }
+
+
+    function Pdfdetails() {
+     var id = @ViewBag.InvoiceId;
+       printPdf(function (pdfDataUri, fileName) {
+        generateAndSendPdf(id, pdfDataUri, fileName);
+    });
+}
+
+
+    function generateAndSendPdf(id, pdfDataUri, fileName) {
+    var id = @ViewBag.InvoiceId;
+       
+    $.ajax({
+        url: '/BrokerNonmoter/BrokerSendPdfEmail/',
+        type: 'POST',
+        data: { id: id, pdfDataUri: pdfDataUri, fileName: fileName},
+        success: function (response) {
+            if (response.success) {
+                toastr.success("Email Sent Successfully!!");
+            } else {
+                toastr.error("Email Sent Failed !!");
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+}
+</script>

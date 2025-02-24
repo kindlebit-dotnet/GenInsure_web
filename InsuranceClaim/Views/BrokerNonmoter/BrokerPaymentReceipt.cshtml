@@ -1,0 +1,373 @@
+﻿@model InsuranceClaim.Models.ReceiptModuleModel
+@{
+    ViewBag.Title = "BrokerPaymentReceipt";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<style>
+    .top-header-section, .footer-section {
+        display: none;
+    }
+
+    table {
+        empty-cells: show;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    #contentdiv {
+        max-width: 900px;
+        margin: 0 auto;
+        padding-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        vertical-align: top;
+        border: 2px solid #3a3b3c;
+    }
+
+    th {
+        text-align: right;
+        border: none;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        float: left;
+    }
+
+    #geneinsureLogo {
+        width: 200px;
+    }
+
+    .receiptHeader, .receiptFooter {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 15px;
+    }
+
+
+
+    .thankYou {
+        padding: 15px 0;
+        color: #444;
+        font-size: 14px;
+        border: 0px;
+        padding: 10px;
+    }
+
+    .print-btn {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 15px;
+        margin: 10px;
+        background-color: #007bff;
+        color: white;
+        border: 2px solid #0056b3;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+</style>
+<body>
+    <div id="contentdiv">
+        <table>
+            <tr>
+                <th>
+                    <img id="geneinsureLogo" src="/Images/geneinsure-logo5.png" alt="Geneinsure Logo">
+                </th>
+                <th id="contactInfo" align="right">
+                    <p>Genetic Financial Services</p>
+                    <p>5 Buckingham Gate</p>
+                    <p>Corner 6th St & J.Chinamano Ave,</p>
+                    <p>Harare</p>
+                </th>
+            </tr>
+            <tr>
+                <td id="customerInfo" colspan="2" style="border:0px!important">
+                    <p class="pdftype">@Model.CustomerName</p>
+                    <p class="emailclass">@Model.Email</p>
+                    <p>@Model.Address1</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="receiptContent">
+            <tbody>
+                <!-- Header -->
+                <tr>
+                    <td colspan="2" class="receiptHeader" style=" font-size: 24px; font-weight: 600; font-family: 'Poppins'; ">Receipt</td>
+                </tr>
+
+                <!-- Receipt Info -->
+                <tr>
+                    <td>DATE</td>
+                    <td align="right">@Model.Date</td>
+                </tr>
+                <tr>
+                    <td>Receipt Number</td>
+                    <td align="center">@Model.Id</td>
+                </tr>
+                <tr>
+                    <td>Invoice Number</td>
+                    <td align="center">@Model.InvoiceNumber</td>
+                </tr>
+                <tr>
+                    <td>Customer Name</td>
+                    <td align="center">@Model.CustomerName</td>
+                </tr>
+
+                <tr>
+                    <td>Invoice Amount</td>
+                    <td align="center">$@Model.InvoiceAmount</td>
+                </tr>
+
+                <tr>
+                    <td>Tendered Amount</td>
+                    <td align="center" id="tenderid">$@Model.TenderedAmount</td>
+                </tr>
+                <tr>
+                    <td>Balance</td>
+                    <td align="center">$@Model.Balance</td>
+                </tr>
+                <tr>
+                    <td>Transaction Reference</td>
+                    <td align="center">@Model.TransactionReference</td>
+                </tr>
+                <tr>
+                    <td>Payment Method</td>
+                    <td align="center">@Model.paymentMethodType</td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td colspan="2" class="receiptFooter"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"> <p><font size="2">Thank you for your business.</font></p></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    <div class="quotes-button-section">
+        <div class="container">
+            <div class="quotes-button-list text-center">
+                <ul class="list-inline">
+                    <li><button class="btn " onclick="SaveAsPdf()" type="button">Save As PDF</button></li>
+                    <li><button class="btn " onclick="Pdfdetails()" id="btnSendemail" type="button">Send Email</button></li>
+                    <li> <button class="btn btnred" type="button" onclick="window.location.href='@Url.Action("PaymentReciept", "BrokerNonmoter")'">Back</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/Scripts/html2pdf.bundle.min.js"></script>
+<script>
+
+    //function SaveAsPdf() {
+    //    var elementHTML = document.querySelector("#contentdiv").cloneNode(true);
+    //    var pdfname = $(".pdftype").text();
+    //    elementHTML.querySelectorAll('script, style').forEach(function (el) {
+    //        el.remove();
+    //    });
+    //    elementHTML.style.height = "auto";
+    //    elementHTML.style.fontSize = "5pt";
+    //    elementHTML.style.lineHeight = "1";
+    //    elementHTML.style.overflow = "hidden";
+    //    html2pdf().from(elementHTML).set({
+    //        filename: "QUOTE_" + pdfname + ".pdf",
+    //        margin: [4, 4, 4, 4],
+    //        html2canvas: { scale: 2 },
+    //        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
+    //        image: { type: 'jpeg', quality: 1 }
+    //    }).save();
+    //    window.scrollTo(0, 0);
+    //}
+
+    $(document).ready(function () {
+        var selectors = ['#tenderid'];
+        selectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+    });
+
+    function formatDecimal(selector) {
+        $(selector).each(function () {
+            // Remove non-numeric characters except for period (.) from the text
+            var cleanedText = $(this).text().replace(/[^0-9.]/g, '');
+
+            // Parse the cleaned text as a float
+            var value = parseFloat(cleanedText);
+
+            if (!isNaN(value)) {
+                // Format the value to always have two decimal places and trailing zeroes
+                var formattedValue = "$" + value.toFixed(2);
+
+                // Append ".00" if there is no decimal point
+                if (formattedValue.indexOf('.') === -1) {
+                    formattedValue += '.00';
+                }
+
+                $(this).text(formattedValue);
+            } else {
+                console.log("Invalid value: " + $(this).text());
+            }
+        });
+    }
+
+    function Pdfdetails() {
+        var id = $('.emailclass').text();
+        printPdf(function (pdfDataUri, fileName) {
+            generateAndSendPdf(id, pdfDataUri, fileName);
+        });
+    }
+
+
+    function printPdf(callback) {
+        var currentTimestamp = new Date().getTime();
+        var randomSuffix = Math.floor(Math.random() * 10000);
+        var FileName = "PDF_" + currentTimestamp + "_" + randomSuffix + ".pdf";
+        var HTML_Width = $("#contentdiv").width();
+        var HTML_Height = $("#contentdiv").height();
+        var top_left_margin = 15;
+        var PDF_Width = HTML_Width + (top_left_margin * 2);
+        var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+        var canvas_image_width = HTML_Width;
+        var canvas_image_height = HTML_Height;
+        var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+        html2canvas($("#contentdiv")[0]).then(function (canvas) {
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+
+            for (var i = 1; i <= totalPDFPages; i++) {
+                pdf.addPage(PDF_Width, PDF_Height);
+                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 3), canvas_image_width, canvas_image_height);
+            }
+            var pdfDataUri = pdf.output('dataurlstring');
+            var base64Data = pdfDataUri.split(',')[1];
+            $.ajax({
+                type: "POST",
+                url: "/BrokerNonmoter/SavePdf",
+                data: { pdfDataUri: base64Data, fileName: FileName },
+                success: function (response) {
+
+                    if (response.success) {
+                        toastr.error("Email Sent Successfully!!");
+                    } else {
+                        toastr.error("Email Sent Failed!!");
+                    }
+                    callback(pdfDataUri, FileName);
+                },
+                error: function () {
+                    toastr.error("An error occurred while saving the PDF.");
+
+                }
+            });
+        });
+    }
+
+    function generateAndSendPdf(id, pdfDataUri, fileName) {
+        var id = $('.emailclass').text();
+
+
+        $.ajax({
+            url: '/BrokerNonmoter/ReceiptSendPdfEmail/',
+            type: 'POST',
+            data: { id: id, pdfDataUri: pdfDataUri, fileName: fileName },
+            success: function (response) {
+                if (response.success) {
+                    toastr.success("Email Sent Successfully!!");
+                } else {
+                    // Handle failure (e.g., show an error message)
+                    toastr.error("Email Sent Failed!!");
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+
+
+     function SaveAsPdf() {
+        var pdfname = $(".pdftype").text();
+        const contentElement = document.getElementById('contentdiv');
+        const fontSize = calculateFontSizeToFit(contentElement);
+        contentElement.style.fontSize = fontSize + 'px';
+        html2pdf(contentElement, {
+            margin: [10, 10, 10, 10],
+            filename: "RECEIPT_" + pdfname + ".pdf",
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [300, 280], orientation: 'portrait' },
+            onePage: false,
+            output: 'save',
+            onPageCreated: function (page, options) {
+                if (page === 1) {
+                    const header = document.createElement('div');
+                    header.textContent = 'Receipt header';
+                    header.style.textAlign = 'center';
+                    header.style.fontSize = '17px';
+                    contentElement.insertBefore(header, contentElement.firstChild);
+                } else {
+                    options.margin = [20, 20, 20, 20];
+                    const newFontSize = calculateFontSizeToFit(contentElement);
+                    contentElement.style.fontSize = newFontSize + 'px';
+                }
+            }
+        });
+        window.scrollTo(0, 0);
+    }
+
+
+    function calculateFontSizeToFit(element) {
+        const maxHeight = 1041;
+        const originalFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+        let currentHeight = element.offsetHeight;
+        let fontSize = originalFontSize;
+        while (currentHeight > maxHeight && fontSize > 1) {
+            fontSize -= 3;
+            element.style.fontSize = fontSize + 'px';
+            currentHeight = element.offsetHeight;
+        }
+
+        return fontSize;
+    }
+
+
+</script>
+
+
+

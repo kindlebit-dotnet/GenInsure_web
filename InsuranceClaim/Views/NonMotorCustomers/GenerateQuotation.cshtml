@@ -1,0 +1,634 @@
+﻿@model InsuranceClaim.Models.listquotation
+@{
+    ViewBag.Title = "GenerateQuotation";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    var customerdata = @ViewBag.data;
+    var UserId = @ViewBag.UserId;
+}
+
+<style>
+    .top-header-section, .footer-section {
+        display: none;
+    }
+
+    .prepared-by {
+        text-transform: capitalize;
+        margin: 8px 0 0 -109px;
+        font-size: 14px;
+        color: #000;
+        display: inline-block;
+        font-weight: 400;
+        font-style: italic;
+    }
+</style>
+<div id="contentdiv">
+    <table border="0" id="content" cellpadding="0" cellspacing="0" width="1200" style="width:1400px; border-collapse: collapse; background-color: white; margin:0 auto; color: #000">
+        <tbody>
+            <tr>
+                <td colspan="10" valign="top" style="padding:0 15px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th colspan="10">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">
+                                                    <a href="">
+                                                        <img width="250" src="/Images/geneinsure-logo5.png" />
+                                                    </a>
+                                                </th>
+                                                <th width="50%" align="right">
+                                                    <div style="text-align:right">
+                                                        <p style="font-size: 13px; margin:0 0 5px">Quotation: <span style="text-transform:uppercase;color: #686868;">@ViewBag.data.Id</span></p>
+                                                        <p style="font-size: 13px; margin: 0 0 5px">Date: <span style="text-transform:uppercase;color: #686868;">@DateTime.Now.ToString("dd/MM/yyyy")</span></p>
+                                                        <p style="font-size: 13px; margin: 0 0 5px">Valid Till: <span style="text-transform:uppercase;color: #686868;">@(DateTime.Now.AddDays(30).ToString("dd/MM/yyyy"))</span></p>
+                                                        <p style="font-size: 13px;">Currency: <span style="text-transform:uppercase;color: #686868;">@ViewBag.Currency</span></p>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2">
+                                                    <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight:500; font-size: 13px; color:#000000; display: inline-block; ">Quotation to: </span>
+                                                    <div style="text-align:left">
+                                                        <div>
+                                                            <div id="name">
+                                                                @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessName))
+                                                                {
+                                                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.BusinessName </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="pdftype" style="text-transform: capitalize; margin: 2px 0 0 0px; text-transform: uppercase; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.FirstName @ViewBag.data.LastName</span>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        @if (!string.IsNullOrWhiteSpace(@ViewBag.data.BusinessAddress))
+                                                        {
+                                                            <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.BusinessAddress</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="text-transform: capitalize; margin: 2px 0 0 0px; font-weight: 500; font-size: 13px; color: #000000; display: inline-block; ">@ViewBag.data.PhysicalAddress</span>
+                                                        }
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            @*<tr>
+                                                    <th colspan="2" style="font-weight: 400; font-weight: 400; font-size: 13px; color: #424242; ">Highlands, Harare</th>
+                                                </tr>*@
+                                            <tr>
+                                                <th colspan="2">
+                                                    @if (@ViewBag.data.ContactNumber != null)
+                                                    {
+                                                        <span style="float: left; text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 400; font-size: 13px; color: #424242;">@ViewBag.data.ContactNumber</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="float: left; text-transform: Capitalize; margin: 2px 0 0 0px; font-weight: 400; font-size: 13px; color: #424242;">@ViewBag.data.BusinessPhoneNumber</span>
+                                                    }
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="10" valign="top" style="padding-top:50px">
+                                    <table id="tableId" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Policy Class</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Risk Cover</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Risk Item</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Risk Description</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Payment Term</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Currency</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Sum Insured</th>
+                                                <th style="font-weight:600; font-size:13px; padding:0 6px 7px">Rate</th>
+                                                @*<th style="font-weight:600; font-size:13px; padding:0 6px 7px" id="thAnnualId">Basic Premium</th>*@
+                                                <th style="font-weight: 600; font-size: 13px; padding: 0 6px 7px; text-align: center;" id="thAnnualId">Annual Premium</th>
+                                                <th style="font-weight: 600; font-size: 13px; padding: 0 6px 7px; text-align: center;" id="thQuart">Quarterly Premium</th>
+                                                <th style="font-weight: 600; font-size: 13px; padding: 0 6px 7px; text-align: center;" id="thTerm">Termly Premium</th>
+                                                <th style="font-weight: 600; font-size: 13px; padding: 0 6px 7px; text-align: center;" id="thMonth">Monthly Premium</th>
+                                                <th style="font-weight: 600; font-size: 13px; padding: 0 6px 7px; text-align: center;" id="thMonth"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in Model.customerdetails)
+                                            {
+                                                <tr>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.PolicyClassName</td>
+
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.RiskCoverName</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">
+                                                        @item.RiskItemName
+                                                        <p><strong>Risk Address:</strong> @item.RiskAddress</p>
+
+                                                    </td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.RiskDescription</td>
+                                                    @*<td>@item.RiskAddress</td>*@
+                                                    <td id="PaymentTerm" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.PaymentTerm</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.Currency</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">@item.SumInsured</td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black;">
+                                                        @*@item.RiskRate*@
+                                                        @{
+                                                            string riskRate = item.RiskRate;
+                                                            if (!string.IsNullOrEmpty(riskRate))
+                                                            {
+                                                                @riskRate<span>%</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                @:&nbsp;
+                                                            }
+                                                        }
+                                                    </td>
+
+                                                    @*<td valign="top" style="text-transform: capitalize;font-size: 13px;font-weight: 400;line-height:16px; padding:10px 6px;border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;    color: #686868;">@item.BasicPremium</td>*@
+                                                    @*<td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@item.AnnualPremium</td>
+                                                        <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@item.QuarterlyPremium</td>
+                                                        <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@item.TerminalPremium </td>
+                                                        <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@item.MonthlyPremium</td>*@
+                                                    <td id="PremiumCell" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">
+                                                        @if (item.PaymentTerm == "Annual")
+                                                        {
+                                                            @item.AnnualPremium.ToString("0.00") }
+                                                        else if (item.PaymentTerm == "Quarterly")
+                                                        {
+                                                            @item.QuarterlyPremium.ToString("0.00") }
+                                                        else if (item.PaymentTerm == "Termly")
+                                                        {
+                                                            @item.TerminalPremium.ToString("0.00") }
+                                                        else if (item.PaymentTerm == "Monthly")
+                                                        {
+                                                            @item.MonthlyPremium.ToString("0.00")}
+                                                    </td>
+                                                    <td valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: 400; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;"></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+                                        <tfoot style="background:#fff">
+                                            <tr>
+                                                <td valign="top" colspan="8" style="font-weight:600;font-size:13px;line-height:16px; padding:10px 6px; border-bottom: 1px solid #ccc;color: #424242;">Total Premium</td>
+                                                <td id="annualTotalPremium" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Annualtotalpayble</td>
+                                                <td id="quarterlyTotalPremium" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Quarterlytotalpayble</td>
+                                                <td id="termlyTotalPremium" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Termlytotalpayble </td>
+                                                <td id="monthlyTotalPremium" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Monthlytotalpayble </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" colspan="8" style="font-weight:600; font-size: 13px; line-height: 16px; padding: 10px 6px; border-bottom: 1px solid #ccc; color: #424242;">Stamp Duty (5%)</td>
+                                                <td id="annualStampDuty" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Annualstampvalue</td>
+                                                <td id="quarterlyStampDuty" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Quarterlystampvalue</td>
+                                                <td id="termlyStampDuty" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Termlystampvalue</td>
+                                                <td id="monthlyStampDuty" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@Model.Monthlystampvalue</td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" colspan="8" style="font-weight: 600; font-size: 13px; line-height: 16px; padding: 10px 6px; color: #424242; border-bottom: 1px solid #ccc; ">Total Payable</td>
+                                                @*<td id="annualTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Annualtotalpayble + Model.Annualstampvalue)</td>
+        <td id="quarterlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Quarterlytotalpayble + Model.Quarterlystampvalue)</td>
+        <td id="termlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Termlytotalpayble+ Model.Termlystampvalue)</td>
+        <td id="monthlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Monthlytotalpayble+ Model.Monthlystampvalue)</td>*@
+
+
+
+                                                <td id="annualTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Annualtotalpayble + Model.Annualstampvalue)</td>
+                                                <td id="quarterlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Quarterlytotalpayble + Model.Quarterlystampvalue )</td>
+                                                <td id="termlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Termlytotalpayble + Model.Termlystampvalue)</td>
+                                                <td id="monthlyTotalPayable" valign="top" style="text-transform: capitalize; font-size: 13px; font-weight: bold; line-height: 16px; padding: 10px 6px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; color: black; text-align: center;">@(Model.Monthlytotalpayble + Model.Monthlystampvalue)</td>
+                                            </tr>
+                                        </tfoot>
+
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td style="padding-top:150px;">
+                    <div class="container" id="QuotationPrepared" style="background-color: white;">
+                        <span id="preparedBySpan" class="prepared-by">Prepared By : @ViewBag.data.LoggedInUser</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="quotes-button-section">
+    <div class="container">
+        <div class="quotes-button-list text-center">
+            <ul class="list-inline">
+                <li><button class="btn " onclick="downloadPDF()" type="button">Save As PDF</button></li>
+                <li><button class="btn " onclick="Pdfdetails()" id="btnSendemail" type="button">Send Email</button></li>
+                <li><button class="btn" type="button" onclick="window.location.href='@Url.Action("GenerateInvoice", "BrokerNonmoter", new { Id =@ViewBag.data.Id }, protocol: Request.Url.Scheme)'">Generate Invoice</button></li>
+                <li> <button class="btn btnred" type="button" onclick="window.location.href='@Url.Action("ViewQuotations", "NonMotorCustomers", new { Id =2098 }, protocol: Request.Url.Scheme)'">Back</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/html2pdf.bundle.min.js"></script>
+<script src="~/Scripts/jspdf.umd.min.js"></script>
+<script src="~/Scripts/html2canvas.min.js"></script>
+
+
+<script>
+
+
+
+    //window.jsPDF = window.jspdf.jsPDF;
+
+    //function downloadPDF() {
+    //    var doc = new jsPDF();
+
+    //    doc.addFont('Calibri', 'normal'); // Ensure Calibri font is added
+    //    doc.setFont('Calibri');
+
+    //    var fontSize = 16; // Reduce font size for clarity
+    //    doc.setFontSize(fontSize);
+
+    //    var pdfname = $(".pdftype").text();
+
+    //    var elementHTML = document.querySelector("#contentdiv");
+
+    //    elementHTML.style.color = '#000';
+    //    elementHTML.style.fontSize = fontSize + 'px';
+    //    elementHTML.style.fontFamily = 'Calibri';
+    //    elementHTML.style.marginLeft = '70px';
+    //    elementHTML.style.fontWeight = 'bold';
+
+    //    doc.html(elementHTML, {
+    //        callback: function (doc) {
+    //            doc.save("QUOTE_" + pdfname + ".pdf");
+    //        },
+    //        margin: [5, 5, 5, 5],
+    //        autoPaging: 'text',
+    //        x: 0,
+    //        y: 0,
+    //        width: 200,
+    //        windowWidth: 1000
+    //    });
+    //}
+
+
+    $(document).ready(function () {
+
+        $('#tableId thead tr th').each(function (index) {
+
+            var allCellsNull = true;
+
+            $('#tableId tbody tr').each(function () {
+
+                var cellText = $(this).find('td:eq(' + index + ')').text().trim();
+                if (cellText !== "0") {
+                    allCellsNull = false;
+                    return false; // Exit the loop if a non-null cell is found
+                }
+            });
+            if (allCellsNull) {
+
+                $(this).hide();
+                $('#tableId tbody tr').each(function () {
+                    $(this).find('td:eq(' + index + ')').hide();
+                });
+            }
+        });
+
+        $('#tableId tfoot tr:nth-child(1) td').each(function (index) {
+
+            var columnIndex = index + 1;
+            var allCellsNull = true;
+            $('#tableId tfoot tr:not(:first-child) td:nth-child(' + columnIndex + ')').each(function () {
+
+                var cellText = $(this).text().trim();
+                if (cellText !== "0") {
+                    allCellsNull = false;
+                    return false; // Exit the loop if a non-null cell is found
+                }
+            });
+
+            // Hide the entire column in the <tfoot> if all cells are null
+            if (allCellsNull) {
+
+                $('#tableId tfoot tr').each(function () {
+                    $(this).find('td:nth-child(' + columnIndex + ')').hide();
+                });
+            }
+        });
+
+
+
+        function formatDecimal(selector) {
+            
+            $(selector).each(function () {
+                var value = parseFloat($(this).text());
+
+                if (!isNaN(value)) {
+                    // Format the value to always have two decimal places and trailing zeroes
+                    var formattedValue = value.toFixed(2);
+
+                    // Append ".00" if there is no decimal point
+                    if (formattedValue.indexOf('.') === -1) {
+                        formattedValue += '.00';
+                    }
+
+                    $(this).text(formattedValue);
+                }
+            });
+        }
+
+        // Selectors for Total Payable elements
+        var selectors = ['#annualTotalPayable', '#quarterlyTotalPayable', '#termlyTotalPayable', '#monthlyTotalPayable'];
+        var totalPremiumSelectors = ['#annualTotalPremium', '#quarterlyTotalPremium', '#termlyTotalPremium', '#monthlyTotalPremium'];
+        var stampDutySelectors = ['#annualStampDuty', '#quarterlyStampDuty', '#termlyStampDuty', '#monthlyStampDuty'];
+
+        // Iterate through elements and format decimal if needed
+        selectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+        // Format decimal for Total Premium
+        totalPremiumSelectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+        // Format decimal for Stamp Duty
+        stampDutySelectors.forEach(function (selector) {
+            formatDecimal(selector);
+        });
+
+
+        var paymentTerm = $('#PaymentTerm').text();
+
+        // Hide all headers first
+        $("#thAnnualId, #thQuart, #thTerm, #thMonth").hide();
+
+        // Show the header based on paymentTerm
+        if (paymentTerm === "Annual") {
+            $("#thAnnualId").show();
+        } else if (paymentTerm === "Quarterly") {
+            $("#thQuart").show();
+        } else if (paymentTerm === "Termly") {
+            $("#thTerm").show();
+        } else if (paymentTerm === "Monthly") {
+            $("#thMonth").show();
+        }
+
+
+
+
+    });
+
+    $.validator.addMethod("dropdownRequired", function (value, element) {
+        return value != "0"; // Change "0" to the value of the default option in your dropdown.
+    }, "Please select a payment term.");
+
+    // Apply the custom rule to the dropdown element
+    $("#PaymentTerm").rules("add", {
+        dropdownRequired: true
+    });
+
+
+    document.getElementById("SumInsured").addEventListener("input", clearPaymentTerm);
+    document.getElementById("RiskRate").addEventListener("input", clearPaymentTerm);
+
+    function clearPaymentTerm() {
+        // Get the Payment Term dropdown
+
+        var paymentTermDropdown = document.getElementById("PaymentTerm");
+
+        // Unselect the currently selected option (set it to the default value)
+        paymentTermDropdown.value = "0";
+        document.getElementById("StampDuty").value = "";
+        document.getElementById("TotalPremiumPayable").value = "";
+    }
+
+
+
+
+
+    //function downloadPDF() {
+    //    var elementHTML = document.querySelector("#contentdiv").cloneNode(true);
+    //    var pdfname = $(".pdftype").text();
+    //    elementHTML.querySelectorAll('script, style').forEach(function (el) {
+    //        el.remove();
+    //    });
+
+    //    elementHTML.style.height = "auto";
+
+    //    elementHTML.style.fontSize = "5pt";
+    //    elementHTML.style.lineHeight = "1";
+    //    elementHTML.style.overflow = "hidden";
+    //    // Generate PDF
+    //    html2pdf().from(elementHTML).set({
+    //        filename: "QUOTE_" + pdfname + ".pdf",
+    //        margin: [4, 4, 4, 4],
+    //        html2canvas: { scale: 2 },
+    //        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
+    //        image: { type: 'jpeg', quality: 1 }
+    //    }).save();
+    //    window.scrollTo(0, 0);
+    //}
+
+
+
+
+
+
+    function printPdf(callback) {
+      var currentTimestamp = new Date().getTime();
+      var randomSuffix = Math.floor(Math.random() * 10000);
+      var FileName = "PDF_" + currentTimestamp + "_" + randomSuffix + ".pdf";
+      var HTML_Width = $("#content").width();
+      var HTML_Height = $("#content").height();
+      var top_left_margin = 15;
+      var PDF_Width = HTML_Width + (top_left_margin * 2);
+      var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+      var canvas_image_width = HTML_Width;
+      var canvas_image_height = HTML_Height;
+      var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+      html2canvas($("#content")[0]).then(function (canvas) {
+          var imgData = canvas.toDataURL("image/jpeg", 1.0);
+          var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+          pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+
+          for (var i = 1; i <= totalPDFPages; i++) {
+              pdf.addPage(PDF_Width, PDF_Height);
+              pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 3), canvas_image_width, canvas_image_height);
+          }
+
+          // Convert the PDF to a data URL (not a data URI)
+          var pdfDataUri = pdf.output('dataurlstring');
+
+
+          var base64Data = pdfDataUri.split(',')[1];
+
+          $.ajax({
+              type: "POST",
+              url: "/NonMotorCustomers/SavePdf",
+              data: { pdfDataUri: base64Data, fileName: FileName },
+              success: function (response) {
+
+                  if (response.success) {
+
+                  } else {
+                      toastr.error("An error occurred while saving the PDF.!!");
+                  }
+                  callback(pdfDataUri, FileName);
+              },
+              error: function () {
+                  toastr.error("An error occurred while saving the PDF.!!");
+
+              }
+          });
+      });
+
+    }
+
+
+    function Pdfdetails() {
+    var id = @ViewBag.UserId;
+
+    printPdf(function (pdfDataUri, fileName) {
+    generateAndSendPdf(id, pdfDataUri, fileName);
+    });
+    }
+
+
+    function generateAndSendPdf(id, pdfDataUri, fileName) {
+        var id = @ViewBag.UserId;
+
+    $.ajax({
+    url: '/NonMotorCustomers/SendPdfEmail/',
+    type: 'POST',
+    data: { id: id, pdfDataUri: pdfDataUri, fileName: fileName},
+    success: function (response) {
+
+        if (response.success) {
+            toastr.success("Email Sent Successfully!!");
+    } else {
+        // Handle failure (e.g., show an error message)
+        toastr.error("Email Sent Failed !!");
+    }
+    },
+    error: function (error) {
+        toastr.error("Email Sent Failed !!");
+    }
+    });
+    }
+
+
+    //function downloadPDF() {
+    //    var pdfname = $(".pdftype").text();
+    //    const contentElement = document.getElementById('contentdiv');
+    //    const fontSize = calculateFontSizeToFit(contentElement);
+    //    contentElement.style.fontSize = fontSize + 'px';
+    //    html2pdf(contentElement, {
+    //        margin: [10, 10, 10, 10],
+    //        filename: "QUOTE_" + pdfname + ".pdf",
+    //        image: { type: 'jpeg', quality: 0.98 },
+    //        html2canvas: { scale: 2 },
+    //        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    //        onePage: false,
+    //        output: 'save',
+    //        onPageCreated: function (page, options) {
+    //            if (page === 1) {
+    //                const header = document.createElement('div');
+    //                header.textContent = 'Quotation Header';
+    //                header.style.textAlign = 'center';
+    //                header.style.fontSize = '17px';
+    //                contentElement.insertBefore(header, contentElement.firstChild);
+    //            } else {
+    //                options.margin = [10, 10, 10, 30];
+    //                const newFontSize = calculateFontSizeToFit(contentElement);
+    //                contentElement.style.fontSize = newFontSize + 'px';
+    //            }
+    //        }
+    //    });
+    //    window.scrollTo(0, 0);
+    //}
+
+
+
+    //function calculateFontSizeToFit(element) {
+    //    const maxHeight = 1041;
+    //    const originalFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+    //    let currentHeight = element.offsetHeight;
+    //    let fontSize = originalFontSize;
+    //    while (currentHeight > maxHeight && fontSize > 1) {
+    //        fontSize -= 3;
+    //        element.style.fontSize = fontSize + 'px';
+    //        currentHeight = element.offsetHeight;
+    //    }
+
+    //    return fontSize;
+    //}
+
+
+    function downloadPDF() {
+        var pdfname = $(".pdftype").text();
+        const contentElement = document.getElementById('contentdiv');
+        const fontSize = calculateFontSizeToFit(contentElement);
+        contentElement.style.fontSize = fontSize + 'px';
+        html2pdf(contentElement, {
+            margin: [10, 10, 10, 10],
+            filename: "QUOTE_" + pdfname + ".pdf",
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [400, 385], orientation: 'portrait' },
+            onePage: false,
+            output: 'save',
+            onPageCreated: function (page, options) {
+                if (page === 1) {
+                    const header = document.createElement('div');
+                    header.textContent = 'Polycyschedule Header';
+                    header.style.textAlign = 'center';
+                    header.style.fontSize = '17px';
+                    contentElement.insertBefore(header, contentElement.firstChild);
+                } else {
+                    options.margin = [20, 20, 20, 20]; // Increase margins
+                    const newFontSize = calculateFontSizeToFit(contentElement);
+                    contentElement.style.fontSize = newFontSize + 'px';
+                }
+            }
+        });
+        window.scrollTo(0, 0);
+    }
+
+
+
+    function calculateFontSizeToFit(element) {
+        const maxHeight = 1041;
+        const originalFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+        let currentHeight = element.offsetHeight;
+        let fontSize = originalFontSize;
+        while (currentHeight > maxHeight && fontSize > 1) {
+            fontSize -= 3;
+            element.style.fontSize = fontSize + 'px';
+            currentHeight = element.offsetHeight;
+        }
+
+        return fontSize;
+    }
+
+
+
+
+</script>

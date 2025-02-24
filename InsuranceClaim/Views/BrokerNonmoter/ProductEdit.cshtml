@@ -1,0 +1,52 @@
+﻿@model InsuranceClaim.Models.RiskCoverModel1
+@{
+    ViewBag.Title = "ProductEdit";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Edit Product Policy Class </h4>
+                        </div>
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Html.BeginForm("ProductEdit", "BrokerNonmoter", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.PolicyClassName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.PolicyClassName, new { @class = "form-control", @name = "InsurerName", @autocomplete = "off", @id = "ProductName", @placeholder = "Enter Product Policy Class Name" })
+                                            @Html.ValidationMessageFor(x => x.PolicyClassName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="next-btn">
+                                    <button type="submit" class="btn">Update</button> &nbsp;
+                                    <button type="button" class="btn" onclick="window.location.href='@Url.Action("NonMoterProductList", "BrokerNonmoter")'">Cancel</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+
